@@ -26,6 +26,8 @@ public class PlayerCharacter : MonoBehaviour
     public float shootCoolTime = 0.5f; //Projectile shoot cool time
     public bool IsPlayer2 = false; //Temporary flag to control player2
     public int hp = 10;
+    public int life;
+    public int score;
 
     Vector2 moveDir = Vector2.zero; //player's movement direction
 
