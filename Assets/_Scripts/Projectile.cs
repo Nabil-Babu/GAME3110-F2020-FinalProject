@@ -30,10 +30,12 @@ public class Projectile : MonoBehaviour
         rb.velocity = moveDir * speed;
     }
 
+    //Only collide with Tile, Oppoenent layer, see Edit->Project Settings->Physics 2D
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.name);
+        //Debug.Log(collision.gameObject.name);
 
+        //If collide with Tile, Opponent, deactivate it and set it back to projectile pool
         if (owner != null)
         {
             gameObject.SetActive(false);

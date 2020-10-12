@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 [DefaultExecutionOrder(-100)] //ensure this script runs before all other player scripts to prevent laggy input
 public class PlayerCharacter : MonoBehaviour
 {
     #region Variables
 
-    Rigidbody2D rb; //player's rigid body
+    Rigidbody2D rb = null; //player's rigid body
+    CapsuleCollider2D capsuleCollider2D = null; //Player's capsule collider
 
     [Header("Attribute")]
     public float moveSpeed = 3.0f;
@@ -28,12 +29,15 @@ public class PlayerCharacter : MonoBehaviour
     public float projectileSpawnYOffset = 1f; //How far does projectile spawn from player
 
     bool isFacingRight = false; //Is character facing right side? for Characte flip
+
+    [SerializeField] LayerMask tileLayerMask; //Used to check if player is on ground
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        capsuleCollider2D = GetComponent<CapsuleCollider2D>();
 
         //Create queue for projectile pool
         listOfProjectile = new Queue<Projectile>();
@@ -50,7 +54,9 @@ public class PlayerCharacter : MonoBehaviour
     void Update()
     {
         //PlayerMove();
-        HandleInput(); 
+        HandleInput();
+
+        IsPlayerOnGround();
     }
 
     private void FixedUpdate()
@@ -102,7 +108,10 @@ public class PlayerCharacter : MonoBehaviour
         //Jump
         if(Input.GetKeyDown(KeyCode.UpArrow))
         {
-            shouldJump = true;
+            if (IsPlayerOnGround() == true)
+            {
+                shouldJump = true;
+            }
         }
 
         //Shoot
@@ -160,5 +169,15 @@ public class PlayerCharacter : MonoBehaviour
     public void ReturnProjectile(Projectile projectile)
     {
         listOfProjectile.Enqueue(projectile);
+    }
+
+    bool IsPlayerOnGround()
+    {
+        //Do capsule cast to downward of player so that it checks if player is on ground
+        RaycastHit2D result = Physics2D.CapsuleCast(capsuleCollider2D.bounds.center, capsuleCollider2D.bounds.size, CapsuleDirection2D.Vertical, 0f, Vector2.down, 0.1f, tileLayerMask);
+
+        //Debug.Log(result.collider);
+
+        return (result.collider != null);
     }
 }

@@ -7858,6 +7858,9 @@ MonoBehaviour:
   projectilePrefab: {fileID: 421579810884697705, guid: 02d0aef0c8ded6d4e85a200657670ecb, type: 3}
   projectileSpawnXOffset: 0.5
   projectileSpawnYOffset: 0.5
+  tileLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!50 &1601730604
 Rigidbody2D:
   serializedVersion: 4
