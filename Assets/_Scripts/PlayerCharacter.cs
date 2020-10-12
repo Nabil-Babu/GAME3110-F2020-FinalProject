@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum USER_LAYER
+{
+    TILE = 8,
+    OPPONENT,
+    PLAYER,
+    OPPONENT_PROJECTILE,
+    PLAYER_PROJECTILE
+}
+
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 [DefaultExecutionOrder(-100)] //ensure this script runs before all other player scripts to prevent laggy input
 public class PlayerCharacter : MonoBehaviour
@@ -15,6 +24,8 @@ public class PlayerCharacter : MonoBehaviour
     public float moveSpeed = 3.0f;
     public float jumpForce = 10f; //How strong does player jump
     public float shootCoolTime = 0.5f; //Projectile shoot cool time
+    public bool IsPlayer2 = false; //Temporary flag to control player2
+    public int hp = 10;
 
     Vector2 moveDir = Vector2.zero; //player's movement direction
 
@@ -44,8 +55,18 @@ public class PlayerCharacter : MonoBehaviour
         for(int i = 0; i < maxNumOfProjectile; ++i)
         {
             GameObject projectile = Instantiate(projectilePrefab);
-            //projectile.SetActive(false);
+            
+            //Set layer 
+            if (gameObject.layer == (int)USER_LAYER.PLAYER)
+            {
+                projectile.layer = (int)USER_LAYER.PLAYER_PROJECTILE;
+            }
+            else if (gameObject.layer == (int)USER_LAYER.OPPONENT)
+            {
+                projectile.layer = (int)USER_LAYER.OPPONENT_PROJECTILE;
+            }
 
+            //Add to pool
             listOfProjectile.Enqueue(projectile.GetComponent<Projectile>());
         }
     }
@@ -76,50 +97,104 @@ public class PlayerCharacter : MonoBehaviour
 
     void HandleInput()
     {
-        //Horizontal move
-        if (Input.GetKey(KeyCode.LeftArrow))
+        //Input for player1
+        if (IsPlayer2 == false)
         {
-            moveDir.x = -1;
-
-            //Characte flip
-            if (isFacingRight == true)
+            //Horizontal move
+            if (Input.GetKey(KeyCode.LeftArrow))
             {
-                isFacingRight = false;
-                transform.Rotate(0f, 180f, 0f);
+                moveDir.x = -1;
+
+                //Characte flip
+                if (isFacingRight == true)
+                {
+                    isFacingRight = false;
+                    transform.Rotate(0f, 180f, 0f);
+                }
+            }
+            else if (Input.GetKey(KeyCode.RightArrow))
+            {
+                moveDir.x = 1;
+
+                //Characte flip
+                if (isFacingRight == false)
+                {
+                    isFacingRight = true;
+                    transform.Rotate(0f, 180f, 0f);
+                }
+            }
+            else
+            {
+                moveDir.x = 0f;
+            }
+
+
+            //Jump
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                if (IsPlayerOnGround() == true)
+                {
+                    shouldJump = true;
+                }
+            }
+
+            //Shoot
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (canShoot == true)
+                {
+                    ShootProjectile();
+                }
             }
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        //Input for player2
+        else if(IsPlayer2 == true)
         {
-            moveDir.x = 1;
-
-            //Characte flip
-            if (isFacingRight == false)
+            //Horizontal move
+            if (Input.GetKey(KeyCode.A))
             {
-                isFacingRight = true;
-                transform.Rotate(0f, 180f, 0f);
+                moveDir.x = -1;
+
+                //Characte flip
+                if (isFacingRight == true)
+                {
+                    isFacingRight = false;
+                    transform.Rotate(0f, 180f, 0f);
+                }
             }
-        }
-        else
-        {
-            moveDir.x = 0f;
-        }
-
-
-        //Jump
-        if(Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            if (IsPlayerOnGround() == true)
+            else if (Input.GetKey(KeyCode.D))
             {
-                shouldJump = true;
+                moveDir.x = 1;
+
+                //Characte flip
+                if (isFacingRight == false)
+                {
+                    isFacingRight = true;
+                    transform.Rotate(0f, 180f, 0f);
+                }
             }
-        }
-
-        //Shoot
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            if (canShoot == true)
+            else
             {
-                ShootProjectile();
+                moveDir.x = 0f;
+            }
+
+
+            //Jump
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                if (IsPlayerOnGround() == true)
+                {
+                    shouldJump = true;
+                }
+            }
+
+            //Shoot
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                if (canShoot == true)
+                {
+                    ShootProjectile();
+                }
             }
         }
     }

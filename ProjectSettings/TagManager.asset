@@ -13,11 +13,11 @@ TagManager:
   - UI
   - 
   - 
-  - Opponent
   - Tile
-  - Projectile
-  - 
-  - 
+  - Opponent
+  - Player
+  - OpponentPorjectile
+  - PlayerProjectile
   - 
   - 
   - 

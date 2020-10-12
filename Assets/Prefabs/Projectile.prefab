@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3009344518228440719}
   - component: {fileID: 8791538982615311870}
   - component: {fileID: 6986583024962194297}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f65bc85887c3dd84da3dac535d3e8f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 1
   owner: {fileID: 0}
 --- !u!1 &4085901791704439297
 GameObject:
@@ -105,7 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 821874356521006908}
   - component: {fileID: 8544266045854643378}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: ProjectileGFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
