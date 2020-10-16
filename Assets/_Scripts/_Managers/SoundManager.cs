@@ -13,33 +13,95 @@ public class Sound
 public class SoundManager : MonoBehaviour
 {
     #region Variables
-    [Header("Background Music")]
+    // can access from anywhere - singleton
+    public static SoundManager instance;
+    public string[] playSoundName;
 
-    [SerializeField]
-    Sound[] bgmStorage; // index[0] - GameScene BGM, 
+    [Header("SFX")]
+    public AudioSource[] audioSourceSFX;
+    public Sound[] sfxSounds;
 
-    [SerializeField]
-    AudioSource bgmPlayer;
+    [Header("BGM")]
+    public AudioSource audioSourceBGM;
+    public Sound[] bgmSounds; // index 0: Game Scene BGM
+
 
 
     #endregion
 
-    // Start is called before the first frame update
-    void Start()
+    #region UNITY_METHOD
+
+    #region Singleton
+    private void Awake()
     {
+        //singleton
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    #endregion
+
+    private void Start()
+    {
+        playSoundName = new string[audioSourceSFX.Length];
         PlayBGM();
     }
+    #endregion
 
-    // Update is called once per frame
-    void Update()
+    #region TO_PLAY_SOUND
+    public void PLaySE(string name)
     {
-        
+        for(int i = 0; i < sfxSounds.Length; ++i)
+        {
+            if(name == sfxSounds[i].soundName)
+            {
+                for(int j = 0; j < audioSourceSFX.Length; ++j)
+                {
+                    if (!audioSourceSFX[j].isPlaying)
+                    {
+                        playSoundName[j] = sfxSounds[i].soundName;
+                        audioSourceSFX[j].clip = sfxSounds[i].audioClip;
+                        audioSourceSFX[j].Play();
+
+                        return;
+                    }
+                }
+                return;
+            }
+        }
+    }
+    public void PlayBGM()
+    {
+        audioSourceBGM.clip = bgmSounds[0].audioClip;
+        audioSourceBGM.Play();
+    }
+    #endregion
+
+    #region TO_STOP_SOUND
+    public void StopAllSE()
+    {
+        for(int i = 0; i < audioSourceSFX.Length; ++i)
+        {
+            audioSourceSFX[i].Stop();
+        }
     }
 
-    // GameScene BGM
-    public void PlayBGM() 
+    public void StopSE(string name)
     {
-        bgmPlayer.clip = bgmStorage[0].audioClip;
-        bgmPlayer.Play();
+        for (int i = 0; i < audioSourceSFX.Length; ++i)
+        {
+            if(playSoundName[i] == name)
+            {
+                audioSourceSFX[i].Stop();
+                break;
+            }
+        }
     }
+    #endregion
 }

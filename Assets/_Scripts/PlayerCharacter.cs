@@ -44,6 +44,13 @@ public class PlayerCharacter : MonoBehaviour
     bool isFacingRight = false; //Is character facing right side? for Characte flip
 
     [SerializeField] LayerMask tileLayerMask; //Used to check if player is on ground
+
+    // to Get SFX sound name 
+    [SerializeField]
+    private string ShootSound;
+    [SerializeField]
+    private string JumpSound;
+
     #endregion
 
     // Start is called before the first frame update
@@ -136,6 +143,7 @@ public class PlayerCharacter : MonoBehaviour
             {
                 if (IsPlayerOnGround() == true)
                 {
+                    SoundManager.instance.PLaySE(JumpSound);
                     shouldJump = true;
                 }
             }
@@ -145,6 +153,7 @@ public class PlayerCharacter : MonoBehaviour
             {
                 if (canShoot == true)
                 {
+                    SoundManager.instance.PLaySE(ShootSound);
                     ShootProjectile();
                 }
             }
@@ -186,15 +195,16 @@ public class PlayerCharacter : MonoBehaviour
             {
                 if (IsPlayerOnGround() == true)
                 {
+                    SoundManager.instance.PLaySE(JumpSound);
                     shouldJump = true;
                 }
             }
-
             //Shoot
             if (Input.GetKeyDown(KeyCode.F))
             {
                 if (canShoot == true)
                 {
+                    SoundManager.instance.PLaySE(ShootSound);
                     ShootProjectile();
                 }
             }
