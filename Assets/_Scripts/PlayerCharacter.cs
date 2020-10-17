@@ -51,6 +51,8 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField]
     private string JumpSound;
 
+    private Animator animator;
+
     #endregion
 
     // Start is called before the first frame update
@@ -58,6 +60,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        animator = GetComponentInChildren<Animator>();
 
         //Create queue for projectile pool
         listOfProjectile = new Queue<Projectile>();
@@ -102,6 +105,7 @@ public class PlayerCharacter : MonoBehaviour
         Vector2 tempVel = rb.velocity;
         tempVel.x = moveDir.x * moveSpeed;
         rb.velocity = tempVel;
+        animator.SetInteger("Direction", (int)moveDir.x);
     }
 
     void HandleInput()
@@ -120,6 +124,7 @@ public class PlayerCharacter : MonoBehaviour
                     isFacingRight = false;
                     transform.Rotate(0f, 180f, 0f);
                 }
+                
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
@@ -131,10 +136,12 @@ public class PlayerCharacter : MonoBehaviour
                     isFacingRight = true;
                     transform.Rotate(0f, 180f, 0f);
                 }
+                
             }
             else
             {
                 moveDir.x = 0f;
+                
             }
 
 
@@ -172,6 +179,7 @@ public class PlayerCharacter : MonoBehaviour
                     isFacingRight = false;
                     transform.Rotate(0f, 180f, 0f);
                 }
+                
             }
             else if (Input.GetKey(KeyCode.D))
             {
@@ -183,10 +191,12 @@ public class PlayerCharacter : MonoBehaviour
                     isFacingRight = true;
                     transform.Rotate(0f, 180f, 0f);
                 }
+                
             }
             else
             {
                 moveDir.x = 0f;
+                
             }
 
 
