@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
-
+using NetworkMessages;
 public class RegistPlayer : MonoBehaviour
 {
     //[SerializeField] TextMeshProUGUI userNameText = null;
@@ -13,18 +13,13 @@ public class RegistPlayer : MonoBehaviour
 
     bool IsRegistingNewPlayer = false;
 
-    [System.Serializable]
-    class UserIDandPassword
+    [SerializeField] Dialog dialog = null;
+
+    // Start is called before the first frame update
+    void Start()
     {
-        public string user_id;
-        public string password;
-    };
 
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-
-    //}
+    }
 
     //// Update is called once per frame
     //void Update()
@@ -38,6 +33,7 @@ public class RegistPlayer : MonoBehaviour
         if (userNameText.text == "" || passwordText.text == "")
         {
             Debug.LogWarning("Plese type username and password");
+            dialog.SetText("Plese type username and password");
         }
         else
         {
@@ -77,10 +73,12 @@ public class RegistPlayer : MonoBehaviour
         if (uwr.isNetworkError)
         {
             Debug.Log("Error While Sending: " + uwr.error);
+            dialog.SetText("Network error, check RegisterPlayer");
         }
         else
         {
             Debug.Log("Received: " + uwr.downloadHandler.text);
+            dialog.SetText("Register success. UserID : " + userInfo.user_id + ", password : " + userInfo.password);
         }
 
         IsRegistingNewPlayer = false;
