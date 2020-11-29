@@ -9906,7 +9906,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Regist
+  m_text: Register
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9997,7 +9997,7 @@ GameObject:
   - component: {fileID: 1116629461}
   - component: {fileID: 1116629460}
   m_Layer: 5
-  m_Name: RegistButton
+  m_Name: RegisterButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10032,10 +10032,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1116629458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e69444ad9f80c43449b89ca4e33c2e2c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c3430ed42048b04cb9ee32ae57ea18e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneDestination: StartScreen
+  userNameText: {fileID: 82627978}
+  passwordText: {fileID: 152931308}
 --- !u!114 &1116629461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10080,8 +10081,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1116629460}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: StartGameScene
+        m_TargetAssemblyTypeName: RegistPlayer, Assembly-CSharp
+        m_MethodName: RegisterNewPlayer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
