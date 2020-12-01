@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NetworkMessages
 {
     [System.Serializable]
-    class UserInfo
+    public class UserInfo
     {
         public string user_id;
         public string password;

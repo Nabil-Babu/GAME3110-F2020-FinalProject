@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
 using NetworkMessages;
+using UnityEngine.SceneManagement;
 
 public class LogIn : MonoBehaviour
 {
@@ -87,11 +88,19 @@ public class LogIn : MonoBehaviour
             Debug.Log(www.downloadHandler.text);
 
             UserInfo data = JsonUtility.FromJson<UserInfo>(www.downloadHandler.text);
-            string s = data.user_id;
 
-            dialog.SetText("Log in success", true);
+            //Save user data
+            GlobalData.instance.userInfo = data;
+
+            dialog.SetText("Log in success", false);
+            Invoke("LoadStartScreen", 2);
         }
 
         IsLogingIn = false;
+    }
+
+    void LoadStartScreen()
+    {
+        SceneManager.LoadScene("StartScreen");
     }
 }
