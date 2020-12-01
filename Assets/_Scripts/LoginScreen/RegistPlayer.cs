@@ -33,13 +33,14 @@ public class RegistPlayer : MonoBehaviour
         if (userNameText.text == "" || passwordText.text == "")
         {
             Debug.LogWarning("Plese type username and password");
-            dialog.SetText("Plese type username and password");
+            dialog.SetText("Plese type username and password", true);
         }
         else
         {
             if (IsRegistingNewPlayer == false)
             {
                 IsRegistingNewPlayer = true;
+                dialog.SetText("Registering new player...", false);
                 StartCoroutine(RegisterNewPlayerCoroutine());
             }
             else
@@ -54,14 +55,20 @@ public class RegistPlayer : MonoBehaviour
     {
         var uwr = new UnityWebRequest("https://44gomupt18.execute-api.us-east-2.amazonaws.com/default/FinalProject_RegistNewPlayer", "POST");
 
-        UserIDandPassword userInfo = new UserIDandPassword();
+        UserInfo userInfo = new UserInfo();
         userInfo.user_id = userNameText.text;
         userNameText.text = "";
 
         userInfo.password = passwordText.text;
         passwordText.text = "";
 
-        
+        userInfo.userName = "UnknownSoldier";
+        userInfo.level = "1";
+        userInfo.hp = "100";
+        userInfo.damage = "10";
+
+
+
         byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(JsonUtility.ToJson(userInfo));
         uwr.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
         uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
@@ -73,12 +80,12 @@ public class RegistPlayer : MonoBehaviour
         if (uwr.isNetworkError)
         {
             Debug.Log("Error While Sending: " + uwr.error);
-            dialog.SetText("Network error, check RegisterPlayer");
+            dialog.SetText("Network error, check RegisterPlayer", true);
         }
         else
         {
             Debug.Log("Received: " + uwr.downloadHandler.text);
-            dialog.SetText("Register success. UserID : " + userInfo.user_id + ", password : " + userInfo.password);
+            dialog.SetText("Register success. UserID : " + userInfo.user_id + ", password : " + userInfo.password, true);
         }
 
         IsRegistingNewPlayer = false;

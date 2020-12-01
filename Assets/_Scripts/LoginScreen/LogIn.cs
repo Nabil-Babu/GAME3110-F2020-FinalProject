@@ -31,13 +31,14 @@ public class LogIn : MonoBehaviour
         if (userNameText.text == "" || passwordText.text == "")
         {
             Debug.LogWarning("Plese type username and password");
-            dialog.SetText("Plese type username and password");
+            dialog.SetText("Plese type username and password", true);
         }
         else
         {
             if (IsLogingIn == false)
             {
                 IsLogingIn = true;
+                dialog.SetText("Loging in...", false);
                 StartCoroutine(LogInFunctionCoroutine());
             }
             else
@@ -77,7 +78,7 @@ public class LogIn : MonoBehaviour
         {
             //Debug.Log(www.error);
             Debug.LogWarning("Check user id and password");
-            dialog.SetText("Check user id and password");
+            dialog.SetText("Check user id and password", true);
         }
         else
         {
@@ -85,10 +86,10 @@ public class LogIn : MonoBehaviour
             // Show results as text
             Debug.Log(www.downloadHandler.text);
 
-            UserIDandPassword data = JsonUtility.FromJson<UserIDandPassword>(www.downloadHandler.text);
+            UserInfo data = JsonUtility.FromJson<UserInfo>(www.downloadHandler.text);
             string s = data.user_id;
 
-            dialog.SetText("Log in success");
+            dialog.SetText("Log in success", true);
         }
 
         IsLogingIn = false;
