@@ -12,6 +12,7 @@ using System;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
+using NetworkMessages;
 
 public class NetworkClient : MonoBehaviour
 {
@@ -116,9 +117,22 @@ public class NetworkClient : MonoBehaviour
 
         //Send data
         //We can only send Byte type so we need to convert data to Bytes
-        Byte[] sendBytes = Encoding.ASCII.GetBytes("connect");
-        udp.Send(sendBytes, sendBytes.Length);
 
+        //Make MSG
+        ConnectMSG connectMSG = new ConnectMSG();
+        if (GlobalData.instance != null)
+        {
+            connectMSG.userInfo = GlobalData.instance.userInfo;
+        }
+
+        //Convert MSG to json string
+        string jsonConnectMSG = JsonUtility.ToJson(connectMSG);
+
+        //Convert json to byte
+        Byte[] sendBytes = Encoding.ASCII.GetBytes(jsonConnectMSG);
+
+        //send byte
+        udp.Send(sendBytes, sendBytes.Length);
 
         //Make OnReceived Function to handle all receving data, pass argument for OnReceived function
         udp.BeginReceive(new AsyncCallback(OnReceived), udp);
@@ -142,96 +156,106 @@ public class NetworkClient : MonoBehaviour
         // do what you'd like with `message` here:
         //convert byte[] data(jason) to string
         string returnData = Encoding.ASCII.GetString(message);
-        Debug.Log("Got this: " + returnData);
+        //Debug.Log("Got this: " + returnData);
 
-        //convert string to Message class
-        //latestMessage = JsonUtility.FromJson<Message>(returnData);
-        //try
-        //{
-        //    //What kind of message is this?
-        //    string msg = "";
-        //    switch (latestMessage.cmd)
-        //    {
-        //        //New client connected
-        //        case commands.NEW_CLIENT:
-        //            Debug.Log("NewClient");
-        //            latestPlayerInfo = JsonUtility.FromJson<Player>(returnData);
+        //convert json string to Message class
+        NetworkHeader latestMessage = JsonUtility.FromJson<NetworkHeader>(returnData);
+        try
+        {
+            //What kind of message is this?
+            string msg = "";
+            switch (latestMessage.cmd)
+            {
+                case Commands.CONNECT_SUCCESS:
+                    Debug.Log("Connected to match making server");
+                    break;
 
-        //            msg = "New client connected!\n";
-        //            msg += "ID: " + latestPlayerInfo.id;
-        //            Debug.Log(msg);
+                //Waiting time message
+                case Commands.WAITING_TIME:
+                    WaitingTimeMSG waitingTimeMSG = JsonUtility.FromJson<WaitingTimeMSG>(returnData);
+                    Debug.Log(waitingTimeMSG.waitingTime);
+                    break;
 
-        //            //Spawn new userAvatar
-        //            ShouldSpawnAvatar = true;
-        //            //Instantiate(userAvatar, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
-        //            break;
-        //        //Update game with new info
-        //        case commands.UPDATE:
-        //            lastestGameState = JsonUtility.FromJson<GameState>(returnData);
-        //            break;
-        //        //Get all clients info
-        //        case commands.All_CLIENT_INFO:
-        //            //lastestAllClietnsInfo = JsonUtility.FromJson<AllClientsInfo>(returnData);
-        //            //msg = "All clients list\n";
+                ////New client connected
+                //case commands.NEW_CLIENT:
+                //    Debug.Log("NewClient");
+                //    latestPlayerInfo = JsonUtility.FromJson<Player>(returnData);
 
-        //            //msg += "Number of clients: " + lastestAllClietnsInfo.numOfClients.ToString() + "\n";
+                //    msg = "New client connected!\n";
+                //    msg += "ID: " + latestPlayerInfo.id;
+                //    Debug.Log(msg);
 
-        //            //for (int i = 0; i < lastestAllClietnsInfo.numOfClients; ++i)
-        //            //{
-        //            //    msg += "Client" + i + "\n";
-        //            //    msg += "IP: " + lastestAllClietnsInfo.allClients[i].IP + "\n";
-        //            //    msg += "PORT: " + lastestAllClietnsInfo.allClients[i].PORT + "\n\n";
-        //            //}
+                //    //Spawn new userAvatar
+                //    ShouldSpawnAvatar = true;
+                //    //Instantiate(userAvatar, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+                //    break;
+                ////Update game with new info
+                //case commands.UPDATE:
+                //    lastestGameState = JsonUtility.FromJson<GameState>(returnData);
+                //    break;
+                ////Get all clients info
+                //case commands.All_CLIENT_INFO:
+                //    //lastestAllClietnsInfo = JsonUtility.FromJson<AllClientsInfo>(returnData);
+                //    //msg = "All clients list\n";
 
-        //            //Debug.Log(msg);
+                //    //msg += "Number of clients: " + lastestAllClietnsInfo.numOfClients.ToString() + "\n";
 
-        //            //Save all client info to create cube
-        //            latestAllClientInfo = JsonUtility.FromJson<GameState>(returnData);
+                //    //for (int i = 0; i < lastestAllClietnsInfo.numOfClients; ++i)
+                //    //{
+                //    //    msg += "Client" + i + "\n";
+                //    //    msg += "IP: " + lastestAllClietnsInfo.allClients[i].IP + "\n";
+                //    //    msg += "PORT: " + lastestAllClietnsInfo.allClients[i].PORT + "\n\n";
+                //    //}
 
-        //            msg = "All clients list\n";
+                //    //Debug.Log(msg);
 
-        //            for (int i = 0; i < latestAllClientInfo.players.Length; ++i)
-        //            {
-        //                msg += "Client" + (i + 1) + "\n";
-        //                msg += "ID: " + latestAllClientInfo.players[i].id + "\n\n";
-        //            }
+                //    //Save all client info to create cube
+                //    latestAllClientInfo = JsonUtility.FromJson<GameState>(returnData);
 
-        //            Debug.Log(msg);
+                //    msg = "All clients list\n";
 
-        //            ShouldSpawnOtherClients = true;
+                //    for (int i = 0; i < latestAllClientInfo.players.Length; ++i)
+                //    {
+                //        msg += "Client" + (i + 1) + "\n";
+                //        msg += "ID: " + latestAllClientInfo.players[i].id + "\n\n";
+                //    }
 
-        //            break;
-        //        case commands.DISCONNECTED_CLIENT:
-        //            DisconnectedClientID disconnectedClientID = JsonUtility.FromJson<DisconnectedClientID>(returnData);
+                //    Debug.Log(msg);
 
-        //            //msg = "disconnected client\n";
-        //            //msg += "IP: " + disconnectedClient.IP + "\n";
-        //            //msg += "PORT: " + disconnectedClient.PORT;
-        //            //Debug.Log(msg);
+                //    ShouldSpawnOtherClients = true;
 
-        //            Debug.Log("Disconnected Client: " + disconnectedClientID.id);
+                //    break;
+                //case commands.DISCONNECTED_CLIENT:
+                //    DisconnectedClientID disconnectedClientID = JsonUtility.FromJson<DisconnectedClientID>(returnData);
 
-        //            latestDisconnectedClientID = disconnectedClientID.id;
-        //            ShouldDeleteClient = true;
+                //    //msg = "disconnected client\n";
+                //    //msg += "IP: " + disconnectedClient.IP + "\n";
+                //    //msg += "PORT: " + disconnectedClient.PORT;
+                //    //Debug.Log(msg);
+
+                //    Debug.Log("Disconnected Client: " + disconnectedClientID.id);
+
+                //    latestDisconnectedClientID = disconnectedClientID.id;
+                //    ShouldDeleteClient = true;
 
 
 
-        //            break;
-        //        case commands.SENDER_IP_PORT:
-        //            ClientInfo clientIPPORT = JsonUtility.FromJson<ClientInfo>(returnData);
-        //            myIP = clientIPPORT.IP;
-        //            myPORT = clientIPPORT.PORT;
-        //            ShouldSetIP = true;
-        //            break;
-        //        default:
-        //            Debug.Log("Error");
-        //            break;
-        //    }
-        //}
-        //catch (Exception e)
-        //{
-        //    Debug.Log(e.ToString());
-        //}
+                //    break;
+                //case commands.SENDER_IP_PORT:
+                //    ClientInfo clientIPPORT = JsonUtility.FromJson<ClientInfo>(returnData);
+                //    myIP = clientIPPORT.IP;
+                //    myPORT = clientIPPORT.PORT;
+                //    ShouldSetIP = true;
+                //    break;
+                default:
+                    Debug.Log("Error");
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
+        }
 
         // schedule the next receive operation once reading is done:
         //continue get next message

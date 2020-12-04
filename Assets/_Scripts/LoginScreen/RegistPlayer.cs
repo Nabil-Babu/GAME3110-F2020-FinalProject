@@ -63,10 +63,7 @@ public class RegistPlayer : MonoBehaviour
         passwordText.text = "";
 
         userInfo.userName = "UnknownSoldier";
-        userInfo.level = "1";
-        userInfo.hp = "100";
-        userInfo.damage = "10";
-
+        userInfo.skillLevel = Random.Range(0, 1001).ToString();
 
 
         byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(JsonUtility.ToJson(userInfo));

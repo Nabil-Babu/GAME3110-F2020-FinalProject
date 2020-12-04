@@ -9,9 +9,7 @@ public class Profile : MonoBehaviour
     [SerializeField] TextMeshProUGUI userIDText = null;
     [SerializeField] TextMeshProUGUI passwordText = null;
     [SerializeField] TextMeshProUGUI userNameText = null;
-    [SerializeField] TextMeshProUGUI levelText = null;
-    [SerializeField] TextMeshProUGUI hpText = null;
-    [SerializeField] TextMeshProUGUI damageText = null;    
+    [SerializeField] TextMeshProUGUI skillLevelText = null;
 
     // Start is called before the first frame update
     void Start()
@@ -23,9 +21,7 @@ public class Profile : MonoBehaviour
             userIDText.text = "UserID: " + info.user_id;
             passwordText.text = "Password: " + info.password;
             userNameText.text = "UserName: " + info.userName;
-            levelText.text = "Level: " + info.level;
-            hpText.text = "Hp: " + info.hp;
-            damageText.text = "Damage: " + info.damage;
+            skillLevelText.text = "SkillLevel: " + info.skillLevel;
         }
         else
         {
