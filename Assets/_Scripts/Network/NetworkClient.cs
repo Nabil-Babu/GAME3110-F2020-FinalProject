@@ -13,6 +13,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using NetworkMessages;
+using UnityEngine.Events;
 
 public class NetworkClient : MonoBehaviour
 {
@@ -21,6 +22,17 @@ public class NetworkClient : MonoBehaviour
     public UdpClient udp;
     public string matchMakingServerIP = "localhost";
     public ushort matchMakingServerPort = 12345;
+
+    //event for starting connecting to match making server
+    public UnityEvent onStartConnectToMatchMakingServer; //Waiting time panel will subscribe this
+    //event for waiting time change, pass current waiting time
+    public UnityEvent<int> onWaitingTimeChanged; //Waiting time panel will subscribe this
+
+    //inside AsyncCallback(OnReceived), we can't call any unity function(Instantiate, event.invoke)
+    bool HasWaitingTimeChanged = false;
+
+    WaitingTimeMSG latestWaitingTimeMSG;
+
     #endregion
 
     public NetworkDriver m_Driver; //simliar to socket
@@ -84,6 +96,17 @@ public class NetworkClient : MonoBehaviour
         //        cmd = m_Connection.PopEvent(m_Driver, out stream);
         //    }
         //}
+
+        //If waiting time changed...
+        if(HasWaitingTimeChanged == true)
+        {
+            if (onWaitingTimeChanged != null)
+            {
+                onWaitingTimeChanged.Invoke(int.Parse(latestWaitingTimeMSG.waitingTime));
+            }
+
+            HasWaitingTimeChanged = false;
+        }
     }
 
     private void OnDestroy()
@@ -136,6 +159,12 @@ public class NetworkClient : MonoBehaviour
 
         //Make OnReceived Function to handle all receving data, pass argument for OnReceived function
         udp.BeginReceive(new AsyncCallback(OnReceived), udp);
+
+
+        if(onStartConnectToMatchMakingServer != null)
+        {
+            onStartConnectToMatchMakingServer.Invoke();
+        }
     }
 
     void OnReceived(IAsyncResult result)
@@ -172,8 +201,11 @@ public class NetworkClient : MonoBehaviour
 
                 //Waiting time message
                 case Commands.WAITING_TIME:
-                    WaitingTimeMSG waitingTimeMSG = JsonUtility.FromJson<WaitingTimeMSG>(returnData);
-                    Debug.Log(waitingTimeMSG.waitingTime);
+                    latestWaitingTimeMSG = JsonUtility.FromJson<WaitingTimeMSG>(returnData);
+                    
+                    //Flag for change waiting time text
+                    HasWaitingTimeChanged = true;
+                    //Debug.Log(waitingTimeMSG.waitingTime);
                     break;
 
                 ////New client connected
