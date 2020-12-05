@@ -1049,7 +1049,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -46}
-  m_SizeDelta: {x: 195.39673, y: 165.08138}
+  m_SizeDelta: {x: 691.196, y: 173.27635}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &724690302
 MonoBehaviour:
@@ -8514,6 +8514,9 @@ MonoBehaviour:
   onWaitingTimeChanged:
     m_PersistentCalls:
       m_Calls: []
+  onMatchFound:
+    m_PersistentCalls:
+      m_Calls: []
   serverIP: 127.0.0.1
   serverPort: 12345
 --- !u!1 &1058311140
@@ -8633,7 +8636,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -285}
-  m_SizeDelta: {x: 620.16766, y: 357.78235}
+  m_SizeDelta: {x: 763.5805, y: 386.46497}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1122556136
 MonoBehaviour:

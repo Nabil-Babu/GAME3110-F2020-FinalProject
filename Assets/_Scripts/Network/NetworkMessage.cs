@@ -21,7 +21,8 @@ namespace NetworkMessages
     {
         CONNECT,
         CONNECT_SUCCESS,
-        WAITING_TIME
+        WAITING_TIME,
+        MATCH_FOUND
     }
 
     [System.Serializable]
@@ -49,6 +50,15 @@ namespace NetworkMessages
         public WaitingTimeMSG()
         {
             cmd = Commands.WAITING_TIME;
+        }
+    };
+
+    [System.Serializable]
+    public class MatchFoundMSG : NetworkHeader
+    {
+        public MatchFoundMSG()
+        {
+            cmd = Commands.MATCH_FOUND;
         }
     };
 }

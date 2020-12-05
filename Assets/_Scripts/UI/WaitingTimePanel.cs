@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class WaitingTimePanel : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class WaitingTimePanel : MonoBehaviour
     {
         networkClient.onWaitingTimeChanged.AddListener(OnWaitingTimeChangedCallback);
         networkClient.onStartConnectToMatchMakingServer.AddListener(OnStartConnectToMatchMakingServerCallback);
+        networkClient.onMatchFound.AddListener(OnMatchFoundCallback);
 
         //Save original position of this panel
         rectTransform = GetComponent<RectTransform>();
@@ -34,12 +36,19 @@ public class WaitingTimePanel : MonoBehaviour
     //// Update is called once per frame
     //void Update()
     //{
-        
+
     //}
+
+    private void OnDestroy()
+    {
+        networkClient.onWaitingTimeChanged.RemoveListener(OnWaitingTimeChangedCallback);
+        networkClient.onStartConnectToMatchMakingServer.RemoveListener(OnStartConnectToMatchMakingServerCallback);
+        networkClient.onMatchFound.RemoveListener(OnMatchFoundCallback);
+    }
 
     void OnWaitingTimeChangedCallback(int currentWaitingTime)
     {
-        Debug.Log("Update waiting time text");
+        //Debug.Log("Update waiting time text");
         waitingTimeText.text = currentWaitingTime.ToString();
     }
 
@@ -50,5 +59,18 @@ public class WaitingTimePanel : MonoBehaviour
         rectTransform.anchoredPosition = originPos;
 
         gameObject.SetActive(true);
+    }
+
+    void OnMatchFoundCallback()
+    {
+        Debug.Log("Match found");
+        waitingTimeText.text = "Match Found!!";
+
+        Invoke("GoToMainScene", 3.0f);
+    }
+
+    void GoToMainScene()
+    {
+        SceneManager.LoadScene("Main");
     }
 }

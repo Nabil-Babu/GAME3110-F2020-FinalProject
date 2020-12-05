@@ -25,13 +25,20 @@ public class NetworkClient : MonoBehaviour
 
     //event for starting connecting to match making server
     public UnityEvent onStartConnectToMatchMakingServer; //Waiting time panel will subscribe this
+    
+    
     //event for waiting time change, pass current waiting time
     public UnityEvent<int> onWaitingTimeChanged; //Waiting time panel will subscribe this
-
     //inside AsyncCallback(OnReceived), we can't call any unity function(Instantiate, event.invoke)
     bool HasWaitingTimeChanged = false;
-
     WaitingTimeMSG latestWaitingTimeMSG;
+
+
+    //event for match found
+    public UnityEvent onMatchFound; //Waiting time panel will subscribe this
+    bool HasFoundMatch = false;
+
+    
 
     #endregion
 
@@ -106,6 +113,18 @@ public class NetworkClient : MonoBehaviour
             }
 
             HasWaitingTimeChanged = false;
+        }
+
+
+        //If found match
+        if(HasFoundMatch == true)
+        {
+            HasFoundMatch = false;
+
+            if(onMatchFound != null)
+            {
+                onMatchFound.Invoke();
+            }
         }
     }
 
@@ -206,6 +225,13 @@ public class NetworkClient : MonoBehaviour
                     //Flag for change waiting time text
                     HasWaitingTimeChanged = true;
                     //Debug.Log(waitingTimeMSG.waitingTime);
+                    break;
+
+                //Match found msg
+                case Commands.MATCH_FOUND:
+                    MatchFoundMSG matchFoundMSG = JsonUtility.FromJson<MatchFoundMSG>(returnData);
+                    Debug.Log("Match found");
+                    HasFoundMatch = true;
                     break;
 
                 ////New client connected
