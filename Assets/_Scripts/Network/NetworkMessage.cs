@@ -26,7 +26,8 @@ namespace NetworkMessages
         PLAYER_INTERNALID,
         PLAYER_UPDATE,
         SERVER_UPDATE,
-        SPAWN_EXISTED_PLAYERS
+        SPAWN_EXISTED_PLAYERS,
+        SPAWN_NEW_PLAYER
     }
 
     [System.Serializable]
@@ -79,7 +80,7 @@ namespace NetworkMessages
     [System.Serializable]
     public class PlayerUpdateMsg : NetworkHeader
     {
-        public Vector3 pos = Vector3.zero;
+        public NetworkObjects.NetworkPlayer player;
         public PlayerUpdateMsg()
         {      // Constructor
             cmd = Commands.PLAYER_UPDATE;

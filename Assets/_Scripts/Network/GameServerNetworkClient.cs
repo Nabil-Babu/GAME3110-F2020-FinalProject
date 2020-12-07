@@ -16,6 +16,8 @@ public class GameServerNetworkClient : MonoBehaviour
     public ushort gameServerPort = 12346;
 
     string playerInternalID; //internal id from server
+    GameObject clientAvatar = null;
+    private Dictionary<string, GameObject> listOfClients = new Dictionary<string, GameObject>(); //Dictionary for all clients
 
     // Start is called before the first frame update
     void Start()
@@ -130,12 +132,12 @@ public class GameServerNetworkClient : MonoBehaviour
                 SpawnExistedPlayer(existedPlayerInfo);
                 break;
 
-            ////Spawn new player
-            //case Commands.SPAWN_NEW_PLAYER:
-            //    PlayerUpdateMsg newPlayerInfo = JsonUtility.FromJson<PlayerUpdateMsg>(recMsg);
-            //    Debug.Log("new client info received!");
-            //    SpawnNewPlayer(newPlayerInfo);
-            //    break;
+            //Spawn new player
+            case Commands.SPAWN_NEW_PLAYER:
+                PlayerUpdateMsg newPlayerInfo = JsonUtility.FromJson<PlayerUpdateMsg>(recMsg);
+                Debug.Log("new client info received!");
+                SpawnNewPlayer(newPlayerInfo);
+                break;
 
             ////handle disconnected player
             //case Commands.DISCONNECTED_PLAYER:
@@ -200,20 +202,20 @@ public class GameServerNetworkClient : MonoBehaviour
         {
             GameObject avatar = Instantiate(clientAvatar);
 
-            listOfClients[data.players[i].id] = avatar;
+            listOfClients[data.players[i].internalID] = avatar;
             avatar.transform.position = data.players[i].pos;
 
-            avatar.GetComponentInChildren<TextMesh>().text = data.players[i].id;
+            //avatar.GetComponentInChildren<TextMesh>().text = data.players[i].id;
         }
     }
 
-    //void SpawnNewPlayer(PlayerUpdateMsg data)
-    //{
-    //    GameObject avatar = Instantiate(clientAvatar);
+    void SpawnNewPlayer(PlayerUpdateMsg data)
+    {
+        GameObject avatar = Instantiate(clientAvatar);
 
-    //    listOfClients[data.player.id] = avatar;
-    //    avatar.GetComponentInChildren<TextMesh>().text = data.player.id;
-    //}
+        listOfClients[data.player.internalID] = avatar;
+        //avatar.GetComponentInChildren<TextMesh>().text = data.player.id;
+    }
 
     //Update all client info with data from server
     //void UpdateClientsInfo(ServerUpdateMsg data)
