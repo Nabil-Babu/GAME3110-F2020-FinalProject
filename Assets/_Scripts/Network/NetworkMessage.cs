@@ -24,7 +24,9 @@ namespace NetworkMessages
         WAITING_TIME,
         MATCH_FOUND,
         PLAYER_INTERNALID,
-        PLAYER_UPDATE
+        PLAYER_UPDATE,
+        SERVER_UPDATE,
+        SPAWN_EXISTED_PLAYERS
     }
 
     [System.Serializable]
@@ -83,6 +85,17 @@ namespace NetworkMessages
             cmd = Commands.PLAYER_UPDATE;
         }
     };
+
+    [System.Serializable]
+    public class ServerUpdateMsg : NetworkHeader
+    {
+        public List<NetworkObjects.NetworkPlayer> players;
+        public ServerUpdateMsg()
+        {      // Constructor
+            cmd = Commands.SERVER_UPDATE;
+            players = new List<NetworkObjects.NetworkPlayer>();
+        }
+    }
 }
 
 namespace NetworkObjects

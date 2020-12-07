@@ -123,12 +123,12 @@ public class GameServerNetworkClient : MonoBehaviour
             //    UpdateClientsInfo(suMsg);
             //    break;
 
-            ////To spawn existed players
-            //case Commands.SPAWN_EXISTED_PLAYERS:
-            //    ServerUpdateMsg existedPlayerInfo = JsonUtility.FromJson<ServerUpdateMsg>(recMsg);
-            //    Debug.Log("existed player info received!");
-            //    SpawnExistedPlayer(existedPlayerInfo);
-            //    break;
+            //To spawn existed players
+            case Commands.SPAWN_EXISTED_PLAYERS:
+                ServerUpdateMsg existedPlayerInfo = JsonUtility.FromJson<ServerUpdateMsg>(recMsg);
+                Debug.Log("existed player info received!");
+                SpawnExistedPlayer(existedPlayerInfo);
+                break;
 
             ////Spawn new player
             //case Commands.SPAWN_NEW_PLAYER:
@@ -193,19 +193,19 @@ public class GameServerNetworkClient : MonoBehaviour
 
     //}
 
-    ////Spawn existed player in server
-    //void SpawnExistedPlayer(ServerUpdateMsg data)
-    //{
-    //    for (int i = 0; i < data.players.Count; ++i)
-    //    {
-    //        GameObject avatar = Instantiate(clientAvatar);
+    //Spawn existed player in server
+    void SpawnExistedPlayer(ServerUpdateMsg data)
+    {
+        for (int i = 0; i < data.players.Count; ++i)
+        {
+            GameObject avatar = Instantiate(clientAvatar);
 
-    //        listOfClients[data.players[i].id] = avatar;
-    //        avatar.transform.position = data.players[i].pos;
+            listOfClients[data.players[i].id] = avatar;
+            avatar.transform.position = data.players[i].pos;
 
-    //        avatar.GetComponentInChildren<TextMesh>().text = data.players[i].id;
-    //    }
-    //}
+            avatar.GetComponentInChildren<TextMesh>().text = data.players[i].id;
+        }
+    }
 
     //void SpawnNewPlayer(PlayerUpdateMsg data)
     //{
