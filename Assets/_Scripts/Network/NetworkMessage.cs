@@ -22,7 +22,9 @@ namespace NetworkMessages
         CONNECT,
         CONNECT_SUCCESS,
         WAITING_TIME,
-        MATCH_FOUND
+        MATCH_FOUND,
+        PLAYER_INTERNALID,
+        PLAYER_UPDATE
     }
 
     [System.Serializable]
@@ -61,4 +63,45 @@ namespace NetworkMessages
             cmd = Commands.MATCH_FOUND;
         }
     };
+
+    [System.Serializable]
+    public class PlayerInternalIDMsg : NetworkHeader
+    {
+        public string playerInternalID;
+        public PlayerInternalIDMsg()
+        {      // Constructor
+            cmd = Commands.PLAYER_INTERNALID;
+        }
+    };
+
+    [System.Serializable]
+    public class PlayerUpdateMsg : NetworkHeader
+    {
+        public Vector3 pos = Vector3.zero;
+        public PlayerUpdateMsg()
+        {      // Constructor
+            cmd = Commands.PLAYER_UPDATE;
+        }
+    };
+}
+
+namespace NetworkObjects
+{
+    //[System.Serializable]
+    //public class NetworkObject
+    //{
+    //    public string id;
+    //}
+
+    [System.Serializable]
+    public class NetworkPlayer// : NetworkObject
+    {
+        public string internalID;
+        public Vector3 pos;
+
+        public NetworkPlayer()
+        {
+            pos = Vector3.zero;
+        }
+    }
 }

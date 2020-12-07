@@ -14,7 +14,7 @@ public class Projectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Projectile Start");
+        //Debug.Log("Projectile Start");
         rb = GetComponent<Rigidbody2D>();
         gameObject.SetActive(false);
     }

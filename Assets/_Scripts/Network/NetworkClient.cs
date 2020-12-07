@@ -1,4 +1,6 @@
-﻿/*
+﻿//Connect to match making server(Python)
+
+/*
 Data from client to server:  (ReadBytes) -> bytes -> (GetString) -> JSON string -> (FromJson) -> c# class
 Data from server to client:   c# class -> (ToJson) -> JSON string -> (GetBytes) -> bytes -> (WriteBytes)
  */
@@ -14,6 +16,7 @@ using System.Net.Sockets;
 using System.Net;
 using NetworkMessages;
 using UnityEngine.Events;
+
 
 public class NetworkClient : MonoBehaviour
 {

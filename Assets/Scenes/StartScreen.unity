@@ -8474,7 +8474,7 @@ GameObject:
   - component: {fileID: 936195672}
   - component: {fileID: 936195673}
   m_Layer: 0
-  m_Name: NetworkClient
+  m_Name: MatchMakingNetworkClient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
