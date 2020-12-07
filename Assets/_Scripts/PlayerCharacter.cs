@@ -55,10 +55,10 @@ public class PlayerCharacter : MonoBehaviour
     private Animator animator;
 
     public GameObject canvas;
-    public GameObject canvas2;
+    //public GameObject canvas2;
 
     public Image hpBar;
-    public Image hpBar2;
+    //public Image hpBar2;
 
     public GameObject gameoverPanel;
 
@@ -183,65 +183,66 @@ public class PlayerCharacter : MonoBehaviour
                 }
             }
         }
-        //Input for player2
-        else if(IsPlayer2 == true)
-        {
-            //Horizontal move
-            if (Input.GetKey(KeyCode.A))
-            {
-                moveDir.x = -1;
 
-                //Characte flip
-                if (isFacingRight == true)
-                {
-                    isFacingRight = false;
-                    transform.Rotate(0f, 180f, 0f);
+        ////Input for player2
+        //else if(IsPlayer2 == true)
+        //{
+        //    //Horizontal move
+        //    if (Input.GetKey(KeyCode.A))
+        //    {
+        //        moveDir.x = -1;
 
-                    canvas2.transform.localScale = new Vector3(1, 1, 1);
+        //        //Characte flip
+        //        if (isFacingRight == true)
+        //        {
+        //            isFacingRight = false;
+        //            transform.Rotate(0f, 180f, 0f);
 
-                }
+        //           // canvas2.transform.localScale = new Vector3(1, 1, 1);
 
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                moveDir.x = 1;
+        //        }
 
-                //Characte flip
-                if (isFacingRight == false)
-                {
-                    isFacingRight = true;
-                    transform.Rotate(0f, 180f, 0f);
+        //    }
+        //    else if (Input.GetKey(KeyCode.D))
+        //    {
+        //        moveDir.x = 1;
 
-                    canvas2.transform.localScale = new Vector3(-1, 1, 1);
-                }
+        //        //Characte flip
+        //        if (isFacingRight == false)
+        //        {
+        //            isFacingRight = true;
+        //            transform.Rotate(0f, 180f, 0f);
+
+        //           // canvas2.transform.localScale = new Vector3(-1, 1, 1);
+        //        }
                 
-            }
-            else
-            {
-                moveDir.x = 0f;
+        //    }
+        //    else
+        //    {
+        //        moveDir.x = 0f;
                 
-            }
+        //    }
 
 
-            //Jump
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                if (IsPlayerOnGround() == true)
-                {
-                    SoundManager.instance.PLaySE(JumpSound);
-                    shouldJump = true;
-                }
-            }
-            //Shoot
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                if (canShoot == true)
-                {
-                    SoundManager.instance.PLaySE(ShootSound);
-                    ShootProjectile();
-                }
-            }
-        }
+        //    //Jump
+        //    if (Input.GetKeyDown(KeyCode.W))
+        //    {
+        //        if (IsPlayerOnGround() == true)
+        //        {
+        //            SoundManager.instance.PLaySE(JumpSound);
+        //            shouldJump = true;
+        //        }
+        //    }
+        //    //Shoot
+        //    if (Input.GetKeyDown(KeyCode.F))
+        //    {
+        //        if (canShoot == true)
+        //        {
+        //            SoundManager.instance.PLaySE(ShootSound);
+        //            ShootProjectile();
+        //        }
+        //    }
+        //}
     }
 
     void PlayerMove()
@@ -306,11 +307,11 @@ public class PlayerCharacter : MonoBehaviour
         hp = 4;
         hpBar.fillAmount = 1.0f;
     }
-    public void PlayerRevive_2()
-    {
-        hp = 4;
-        hpBar2.fillAmount = 1.0f;
-    }
+    //public void PlayerRevive_2()
+    //{
+    //    hp = 4;
+    //    hpBar2.fillAmount = 1.0f;
+    //}
     public void OnGameOver()
     {
         gameoverPanel.SetActive(true);

@@ -30,27 +30,27 @@ public class Projectile : MonoBehaviour
         //Debug.Log(collision.gameObject.name);
         PlayerCharacter player = GetComponent<PlayerCharacter>();
         //If projectile is player's
-        if (gameObject.layer == (int)USER_LAYER.PLAYER_PROJECTILE &&
-            collision.gameObject.layer == (int)USER_LAYER.OPPONENT)
-        {
-            collision.gameObject.GetComponent<PlayerCharacter>().hp -= 1;
-            collision.gameObject.GetComponent<PlayerCharacter>().hpBar2.fillAmount -= 0.25f;
+        //if (gameObject.layer == (int)USER_LAYER.PLAYER_PROJECTILE &&
+        //    collision.gameObject.layer == (int)USER_LAYER.OPPONENT)
+        //{
+        //    collision.gameObject.GetComponent<PlayerCharacter>().hp -= 1;
+        //    collision.gameObject.GetComponent<PlayerCharacter>().hpBar2.fillAmount -= 0.25f;
 
-            if (collision.gameObject.GetComponent<PlayerCharacter>().hp == 0)
-            {
-                collision.gameObject.GetComponent<PlayerCharacter>().life -= 1;
-                collision.gameObject.GetComponent<PlayerCharacter>().PlayerRevive_2();
-                collision.gameObject.GetComponent<PlayerSpawner>().Respawn();
+        //    if (collision.gameObject.GetComponent<PlayerCharacter>().hp == 0)
+        //    {
+        //        collision.gameObject.GetComponent<PlayerCharacter>().life -= 1;
+        //        collision.gameObject.GetComponent<PlayerCharacter>().PlayerRevive_2();
+        //        collision.gameObject.GetComponent<PlayerSpawner>().Respawn();
 
-                if (collision.gameObject.GetComponent<PlayerCharacter>().life == 0)
-                {
-                    Debug.Log("0");
-                    collision.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
-                }
-            }
+        //        if (collision.gameObject.GetComponent<PlayerCharacter>().life == 0)
+        //        {
+        //            Debug.Log("0");
+        //            collision.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
+        //        }
+        //    }
             
-        }
-        else if(gameObject.layer == (int)USER_LAYER.OPPONENT_PROJECTILE &&
+        //}
+        if(gameObject.layer == (int)USER_LAYER.OPPONENT_PROJECTILE &&
             collision.gameObject.layer == (int)USER_LAYER.PLAYER)
         {
             collision.gameObject.GetComponent<PlayerCharacter>().hp -= 1;
