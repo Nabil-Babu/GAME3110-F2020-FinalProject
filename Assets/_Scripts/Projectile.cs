@@ -10,21 +10,14 @@ public class Projectile : MonoBehaviour
     public float speed = 5f; //projectile speed
 
     public PlayerCharacter owner = null; //Who ownes this projectile?
-
     // Start is called before the first frame update
+
     void Start()
     {
         Debug.Log("Projectile Start");
         rb = GetComponent<Rigidbody2D>();
         gameObject.SetActive(false);
-
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 
     public void SetProjectileDirection(Vector2 moveDir)
     {
@@ -51,7 +44,8 @@ public class Projectile : MonoBehaviour
 
                 if (collision.gameObject.GetComponent<PlayerCharacter>().life == 0)
                 {
-
+                    Debug.Log("0");
+                    collision.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
                 }
             }
             
@@ -70,7 +64,8 @@ public class Projectile : MonoBehaviour
 
                 if (collision.gameObject.GetComponent<PlayerCharacter>().life == 0)
                 {
-
+                    Debug.Log("0");
+                    collision.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
                 }
             }
         }

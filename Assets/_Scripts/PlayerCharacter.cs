@@ -60,11 +60,15 @@ public class PlayerCharacter : MonoBehaviour
     public Image hpBar;
     public Image hpBar2;
 
+    public GameObject gameoverPanel;
+
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
+        gameoverPanel.SetActive(false);
+
         rb = GetComponent<Rigidbody2D>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         animator = GetComponentInChildren<Animator>();
@@ -299,12 +303,17 @@ public class PlayerCharacter : MonoBehaviour
 
     public void PlayerRevive_1()
     {
-        hp = 10;
+        hp = 4;
         hpBar.fillAmount = 1.0f;
     }
     public void PlayerRevive_2()
     {
-        hp = 10;
+        hp = 4;
         hpBar2.fillAmount = 1.0f;
+    }
+    public void OnGameOver()
+    {
+        gameoverPanel.SetActive(true);
+        Time.timeScale = 0.0f;
     }
 }

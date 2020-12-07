@@ -6663,8 +6663,8 @@ MonoBehaviour:
   jumpForce: 15
   shootCoolTime: 0.5
   IsPlayer2: 1
-  hp: 4
-  life: 3
+  hp: 5
+  life: 1
   score: 0
   maxNumOfProjectile: 10
   projectilePrefab: {fileID: 421579810884697705, guid: 02d0aef0c8ded6d4e85a200657670ecb, type: 3}
@@ -11869,8 +11869,8 @@ MonoBehaviour:
   jumpForce: 15
   shootCoolTime: 0.5
   IsPlayer2: 0
-  hp: 4
-  life: 3
+  hp: 5
+  life: 1
   score: 0
   maxNumOfProjectile: 10
   projectilePrefab: {fileID: 421579810884697705, guid: 02d0aef0c8ded6d4e85a200657670ecb, type: 3}
