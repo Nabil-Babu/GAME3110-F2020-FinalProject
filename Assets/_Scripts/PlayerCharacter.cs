@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum USER_LAYER
 {
@@ -52,6 +53,12 @@ public class PlayerCharacter : MonoBehaviour
     private string JumpSound;
 
     private Animator animator;
+
+    public GameObject canvas;
+    public GameObject canvas2;
+
+    public Image hpBar;
+    public Image hpBar2;
 
     #endregion
 
@@ -123,8 +130,13 @@ public class PlayerCharacter : MonoBehaviour
                 {
                     isFacingRight = false;
                     transform.Rotate(0f, 180f, 0f);
+
+
+                    canvas.transform.localScale = new Vector3(1, 1, 1);
+
+
                 }
-                
+
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
@@ -135,8 +147,10 @@ public class PlayerCharacter : MonoBehaviour
                 {
                     isFacingRight = true;
                     transform.Rotate(0f, 180f, 0f);
+
+                    canvas.transform.localScale = new Vector3(-1, 1, 1);
                 }
-                
+
             }
             else
             {
@@ -178,8 +192,11 @@ public class PlayerCharacter : MonoBehaviour
                 {
                     isFacingRight = false;
                     transform.Rotate(0f, 180f, 0f);
+
+                    canvas2.transform.localScale = new Vector3(1, 1, 1);
+
                 }
-                
+
             }
             else if (Input.GetKey(KeyCode.D))
             {
@@ -190,6 +207,8 @@ public class PlayerCharacter : MonoBehaviour
                 {
                     isFacingRight = true;
                     transform.Rotate(0f, 180f, 0f);
+
+                    canvas2.transform.localScale = new Vector3(-1, 1, 1);
                 }
                 
             }
@@ -276,5 +295,16 @@ public class PlayerCharacter : MonoBehaviour
         //Debug.Log(result.collider);
 
         return (result.collider != null);
+    }
+
+    public void PlayerRevive_1()
+    {
+        hp = 10;
+        hpBar.fillAmount = 1.0f;
+    }
+    public void PlayerRevive_2()
+    {
+        hp = 10;
+        hpBar2.fillAmount = 1.0f;
     }
 }
