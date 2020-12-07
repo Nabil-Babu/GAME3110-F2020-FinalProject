@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum USER_LAYER
 {
@@ -53,11 +54,21 @@ public class PlayerCharacter : MonoBehaviour
 
     private Animator animator;
 
+    public GameObject canvas;
+    public GameObject canvas2;
+
+    public Image hpBar;
+    public Image hpBar2;
+
+    public GameObject gameoverPanel;
+
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
+        gameoverPanel.SetActive(false);
+
         rb = GetComponent<Rigidbody2D>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         animator = GetComponentInChildren<Animator>();
@@ -123,8 +134,13 @@ public class PlayerCharacter : MonoBehaviour
                 {
                     isFacingRight = false;
                     transform.Rotate(0f, 180f, 0f);
+
+
+                    canvas.transform.localScale = new Vector3(1, 1, 1);
+
+
                 }
-                
+
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
@@ -135,8 +151,10 @@ public class PlayerCharacter : MonoBehaviour
                 {
                     isFacingRight = true;
                     transform.Rotate(0f, 180f, 0f);
+
+                    canvas.transform.localScale = new Vector3(-1, 1, 1);
                 }
-                
+
             }
             else
             {
@@ -178,8 +196,11 @@ public class PlayerCharacter : MonoBehaviour
                 {
                     isFacingRight = false;
                     transform.Rotate(0f, 180f, 0f);
+
+                    canvas2.transform.localScale = new Vector3(1, 1, 1);
+
                 }
-                
+
             }
             else if (Input.GetKey(KeyCode.D))
             {
@@ -190,6 +211,8 @@ public class PlayerCharacter : MonoBehaviour
                 {
                     isFacingRight = true;
                     transform.Rotate(0f, 180f, 0f);
+
+                    canvas2.transform.localScale = new Vector3(-1, 1, 1);
                 }
                 
             }
@@ -276,5 +299,21 @@ public class PlayerCharacter : MonoBehaviour
         //Debug.Log(result.collider);
 
         return (result.collider != null);
+    }
+
+    public void PlayerRevive_1()
+    {
+        hp = 4;
+        hpBar.fillAmount = 1.0f;
+    }
+    public void PlayerRevive_2()
+    {
+        hp = 4;
+        hpBar2.fillAmount = 1.0f;
+    }
+    public void OnGameOver()
+    {
+        gameoverPanel.SetActive(true);
+        Time.timeScale = 0.0f;
     }
 }

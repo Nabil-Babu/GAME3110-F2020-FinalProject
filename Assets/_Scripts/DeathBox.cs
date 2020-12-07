@@ -10,6 +10,11 @@ public class DeathBox : MonoBehaviour
         {
             collider.gameObject.GetComponent<PlayerCharacter>().life--;
             collider.gameObject.GetComponent<PlayerSpawner>().Respawn();
+            if (collider.gameObject.GetComponent<PlayerCharacter>().life == 0)
+            {
+                Debug.Log("0");
+                collider.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
+            }
         }
     }
 }

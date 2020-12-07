@@ -10,20 +10,14 @@ public class Projectile : MonoBehaviour
     public float speed = 5f; //projectile speed
 
     public PlayerCharacter owner = null; //Who ownes this projectile?
-
     // Start is called before the first frame update
+
     void Start()
     {
         //Debug.Log("Projectile Start");
         rb = GetComponent<Rigidbody2D>();
         gameObject.SetActive(false);
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 
     public void SetProjectileDirection(Vector2 moveDir)
     {
@@ -34,17 +28,46 @@ public class Projectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log(collision.gameObject.name);
-
+        PlayerCharacter player = GetComponent<PlayerCharacter>();
         //If projectile is player's
-        if(gameObject.layer == (int)USER_LAYER.PLAYER_PROJECTILE &&
+        if (gameObject.layer == (int)USER_LAYER.PLAYER_PROJECTILE &&
             collision.gameObject.layer == (int)USER_LAYER.OPPONENT)
         {
             collision.gameObject.GetComponent<PlayerCharacter>().hp -= 1;
+            collision.gameObject.GetComponent<PlayerCharacter>().hpBar2.fillAmount -= 0.25f;
+
+            if (collision.gameObject.GetComponent<PlayerCharacter>().hp == 0)
+            {
+                collision.gameObject.GetComponent<PlayerCharacter>().life -= 1;
+                collision.gameObject.GetComponent<PlayerCharacter>().PlayerRevive_2();
+                collision.gameObject.GetComponent<PlayerSpawner>().Respawn();
+
+                if (collision.gameObject.GetComponent<PlayerCharacter>().life == 0)
+                {
+                    Debug.Log("0");
+                    collision.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
+                }
+            }
+            
         }
         else if(gameObject.layer == (int)USER_LAYER.OPPONENT_PROJECTILE &&
             collision.gameObject.layer == (int)USER_LAYER.PLAYER)
         {
             collision.gameObject.GetComponent<PlayerCharacter>().hp -= 1;
+            collision.gameObject.GetComponent<PlayerCharacter>().hpBar.fillAmount -= 0.25f;
+
+            if (collision.gameObject.GetComponent<PlayerCharacter>().hp == 0)
+            {
+                collision.gameObject.GetComponent<PlayerCharacter>().life -= 1;
+                collision.gameObject.GetComponent<PlayerCharacter>().PlayerRevive_1();
+                collision.gameObject.GetComponent<PlayerSpawner>().Respawn();
+
+                if (collision.gameObject.GetComponent<PlayerCharacter>().life == 0)
+                {
+                    Debug.Log("0");
+                    collision.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
+                }
+            }
         }
 
         //    if (collision.gameObject.layer == USER_LAYER.PLAYER)
