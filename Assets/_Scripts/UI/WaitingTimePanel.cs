@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
 
 public class WaitingTimePanel : MonoBehaviour
 {
@@ -49,7 +50,10 @@ public class WaitingTimePanel : MonoBehaviour
     void OnWaitingTimeChangedCallback(int currentWaitingTime)
     {
         //Debug.Log("Update waiting time text");
-        waitingTimeText.text = currentWaitingTime.ToString();
+
+        //waitingTimeText.text = currentWaitingTime.ToString();
+        var ts = TimeSpan.FromSeconds(currentWaitingTime);
+        waitingTimeText.text = string.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
     }
 
     void OnStartConnectToMatchMakingServerCallback()
