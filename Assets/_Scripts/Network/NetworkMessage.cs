@@ -14,15 +14,15 @@ namespace NetworkMessages
         public string skillLevel;
     };
 
-
-
-
     public enum Commands
     {
         CONNECT,
         CONNECT_SUCCESS,
         WAITING_TIME,
         MATCH_FOUND,
+        HANDSHAKE,
+        HITSCAN,
+        PLAYER_HIT,
         PLAYER_INTERNALID,
         PLAYER_UPDATE,
         SERVER_UPDATE,
@@ -68,6 +68,40 @@ namespace NetworkMessages
     };
 
     [System.Serializable]
+    public class HandshakeMsg : NetworkHeader
+    {
+        public NetworkObjects.NetworkPlayer player;
+        public HandshakeMsg()
+        {      // Constructor
+            cmd = Commands.HANDSHAKE;
+            player = new NetworkObjects.NetworkPlayer();
+        }
+    }
+
+    [System.Serializable]
+    public class HitScanMsg : NetworkHeader
+    {
+        public Vector3 origin;
+        public Vector3 direction; 
+        public HitScanMsg()
+        {      // Constructor
+            cmd = Commands.HITSCAN;
+            origin = Vector3.zero;
+            direction = Vector3.zero; 
+        }
+    }
+
+    [System.Serializable]
+    public class PlayerHitMsg : NetworkHeader
+    {
+        public string playerInternalID;
+        public PlayerHitMsg()
+        {      // Constructor
+            cmd = Commands.PLAYER_HIT;
+        }
+    }
+
+    [System.Serializable]
     public class PlayerInternalIDMsg : NetworkHeader
     {
         public string playerInternalID;
@@ -84,6 +118,7 @@ namespace NetworkMessages
         public PlayerUpdateMsg()
         {      // Constructor
             cmd = Commands.PLAYER_UPDATE;
+            player = new NetworkObjects.NetworkPlayer();
         }
     };
 

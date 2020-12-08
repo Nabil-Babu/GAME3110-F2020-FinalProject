@@ -4,17 +4,10 @@ using UnityEngine;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    public GameObject spawnPoint;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        transform.position = spawnPoint.transform.position;
-    }
-
+    public Vector3 spawnPoint = Vector3.zero;
     public void Respawn()
     {
-        transform.position = spawnPoint.transform.position;
+        transform.position = spawnPoint;
     }
 
 

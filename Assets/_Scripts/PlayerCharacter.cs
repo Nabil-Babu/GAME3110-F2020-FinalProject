@@ -62,11 +62,14 @@ public class PlayerCharacter : MonoBehaviour
 
     public GameObject gameoverPanel;
 
+    public GameServerNetworkClient clientConnection; 
+
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
+        gameoverPanel = GameObject.Find("GameOver"); 
         gameoverPanel.SetActive(false);
 
         rb = GetComponent<Rigidbody2D>();
@@ -277,6 +280,7 @@ public class PlayerCharacter : MonoBehaviour
 
             //Can't shoot projectile continousely
             canShoot = false;
+            clientConnection.SendHitScanMsg(projectile.transform.position, forwardVec); // Send Message to Server to HitScan from this position
             Invoke("ResetShootCoolDown", shootCoolTime);
         }
     }
@@ -307,6 +311,24 @@ public class PlayerCharacter : MonoBehaviour
         hp = 4;
         hpBar.fillAmount = 1.0f;
     }
+
+    public void TakeHit()
+    {
+        Debug.Log("Taking Damage"); 
+        hp -= 1;
+        hpBar.fillAmount -= 0.25f;
+        if(hp == 0)
+        {
+            life -= 1;
+            PlayerRevive_1();
+            GetComponent<PlayerSpawner>().Respawn(); 
+            if(life == 0)
+            {
+                OnGameOver(); 
+            }
+        }
+    }
+
     //public void PlayerRevive_2()
     //{
     //    hp = 4;

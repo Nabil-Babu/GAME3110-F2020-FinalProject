@@ -7,6 +7,7 @@ using Unity.Collections;
 using Unity.Networking.Transport;
 using NetworkMessages;
 using System.Text;
+using UnityEngine.UI;
 
 public class GameServerNetworkClient : MonoBehaviour
 {
@@ -15,9 +16,15 @@ public class GameServerNetworkClient : MonoBehaviour
     public string serverIP;
     public ushort gameServerPort = 12346;
 
+    [SerializeField]
+    Transform player = null; //reference to client-player
     string playerInternalID; //internal id from server
-    GameObject clientAvatar = null;
+
+    [SerializeField]
+    GameObject clientAvatar = null; //Player Prefab to spawn in
     private Dictionary<string, GameObject> listOfClients = new Dictionary<string, GameObject>(); //Dictionary for all clients
+
+    PlayerUpdateMsg playerInfo = new PlayerUpdateMsg(); 
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +34,9 @@ public class GameServerNetworkClient : MonoBehaviour
         m_Connection = default(NetworkConnection);
 
         //serverIP = "3.15.221.96";
+        
+        //serverIP = "174.95.96.92"; // Was testing on my Laptop did not work
+
         serverIP = "127.0.0.1";
         var endpoint = NetworkEndPoint.Parse(serverIP, gameServerPort);
         m_Connection = m_Driver.Connect(endpoint); //connect to server
@@ -84,7 +94,7 @@ public class GameServerNetworkClient : MonoBehaviour
         //Debug.Log("My IP: " + m_Driver.);
         //Debug.Log("My PORT: " + m_Driver.LocalEndPoint().Port);
 
-        //InvokeRepeating("SendPlayerInfo", 0.1f, 0.03f); //Start sending player's position to server
+        InvokeRepeating("SendPlayerInfo", 0.1f, 0.03f); //Start sending player's position to server
 
         //// Example to send a handshake message:
         // HandshakeMsg m = new HandshakeMsg();
@@ -102,10 +112,16 @@ public class GameServerNetworkClient : MonoBehaviour
 
         switch (header.cmd)
         {
-            //case Commands.HANDSHAKE:
-            //    HandshakeMsg hsMsg = JsonUtility.FromJson<HandshakeMsg>(recMsg);
-            //    Debug.Log("Handshake message received!");
-            //    break;
+            case Commands.HANDSHAKE:
+               HandshakeMsg hsMsg = JsonUtility.FromJson<HandshakeMsg>(recMsg);
+               Debug.Log("Handshake message received!");
+               SpawnClientOwnedPlayer(hsMsg);
+               break;
+            case Commands.PLAYER_HIT:
+               PlayerHitMsg playerHitMsg = JsonUtility.FromJson<PlayerHitMsg>(recMsg);
+               DealDamageToClient(playerHitMsg.playerInternalID);
+               Debug.Log("Player Hit message received: "+playerHitMsg.playerInternalID);
+               break;
 
             case Commands.PLAYER_INTERNALID:
                 PlayerInternalIDMsg internalIDMsg = JsonUtility.FromJson<PlayerInternalIDMsg>(recMsg);
@@ -158,17 +174,17 @@ public class GameServerNetworkClient : MonoBehaviour
         m_Connection = default(NetworkConnection);
     }
 
-    //void SendToServer(string message)
-    //{
-    //    //When you establish a connection between the client and the server, 
-    //    //you send a data. The use of the BeginSend / EndSend pattern together with the DataStreamWriter,
-    //    //write data into the stream, and finally send it out on the network.
+    void SendToServer(string message)
+    {
+       //When you establish a connection between the client and the server, 
+       //you send a data. The use of the BeginSend / EndSend pattern together with the DataStreamWriter,
+       //write data into the stream, and finally send it out on the network.
 
-    //    var writer = m_Driver.BeginSend(m_Connection);
-    //    NativeArray<byte> bytes = new NativeArray<byte>(Encoding.ASCII.GetBytes(message), Allocator.Temp);
-    //    writer.WriteBytes(bytes);
-    //    m_Driver.EndSend(writer);
-    //}
+       var writer = m_Driver.BeginSend(m_Connection);
+       NativeArray<byte> bytes = new NativeArray<byte>(Encoding.ASCII.GetBytes(message), Allocator.Temp);
+       writer.WriteBytes(bytes);
+       m_Driver.EndSend(writer);
+    }
 
     void Disconnect()
     {
@@ -178,22 +194,29 @@ public class GameServerNetworkClient : MonoBehaviour
     }
 
 
-    //void SendPlayerInfo()
-    //{
-    //    //player.position
+    void SendPlayerInfo()
+    {
+       //player.position
 
-    //    //// Example to send a handshake message:
-    //    //HandshakeMsg m = new HandshakeMsg();
-    //    //m.player.id = m_Connection.InternalId.ToString();
-    //    //SendToServer(JsonUtility.ToJson(m));
+       //// Example to send a handshake message:
+       //HandshakeMsg m = new HandshakeMsg();
+       //m.player.id = m_Connection.InternalId.ToString();
+       //SendToServer(JsonUtility.ToJson(m));
+       Debug.Log("Sending Player Info to Server");
+       playerInfo.player.internalID = playerInternalID;
+       playerInfo.player.pos = player.position;
+       SendToServer(JsonUtility.ToJson(playerInfo));
 
+    }
 
-    //    playerInfo.player.pos = player.position;
-    //    playerInfo.player.color = player.gameObject.GetComponent<Renderer>().material.color;
-
-    //    SendToServer(JsonUtility.ToJson(playerInfo));
-
-    //}
+    public void SendHitScanMsg(Vector3 origin, Vector3 direction)
+    {
+        Debug.Log("Sending HitScan Message to Server"); 
+        HitScanMsg hitScanMsg = new HitScanMsg();
+        hitScanMsg.origin = origin;
+        hitScanMsg.direction = direction;
+        SendToServer(JsonUtility.ToJson(hitScanMsg)); 
+    }
 
     //Spawn existed player in server
     void SpawnExistedPlayer(ServerUpdateMsg data)
@@ -204,7 +227,6 @@ public class GameServerNetworkClient : MonoBehaviour
 
             listOfClients[data.players[i].internalID] = avatar;
             avatar.transform.position = data.players[i].pos;
-
             //avatar.GetComponentInChildren<TextMesh>().text = data.players[i].id;
         }
     }
@@ -214,7 +236,28 @@ public class GameServerNetworkClient : MonoBehaviour
         GameObject avatar = Instantiate(clientAvatar);
 
         listOfClients[data.player.internalID] = avatar;
-        //avatar.GetComponentInChildren<TextMesh>().text = data.player.id;
+        avatar.transform.position = data.player.pos;
+        avatar.GetComponentInChildren<Text>().text = "Player "+data.player.internalID;
+        avatar.GetComponentInChildren<PlayerCharacter>().IsPlayer2 = true; 
+    }
+
+    void SpawnClientOwnedPlayer(HandshakeMsg data)
+    {
+        GameObject avatar = Instantiate(clientAvatar);
+        listOfClients[data.player.internalID] = avatar;
+        avatar.transform.position = data.player.pos;
+        avatar.GetComponent<PlayerSpawner>().spawnPoint = data.player.pos;
+        avatar.GetComponentInChildren<Text>().text = "Player "+data.player.internalID;
+        avatar.GetComponent<PlayerCharacter>().clientConnection = this; 
+        player = avatar.transform; 
+    }
+
+    void DealDamageToClient(string clientID)
+    {
+        if(listOfClients.ContainsKey(clientID))
+        {
+            listOfClients[clientID].GetComponent<PlayerCharacter>().TakeHit(); 
+        }
     }
 
     //Update all client info with data from server
