@@ -10,8 +10,7 @@ public class Projectile : MonoBehaviour
     public float speed = 5f; //projectile speed
 
     public PlayerCharacter owner = null; //Who ownes this projectile?
-    // Start is called before the first frame update
-
+    public GameServerNetworkClient ownedClient = null; 
     void Start()
     {
         //Debug.Log("Projectile Start");
@@ -28,7 +27,7 @@ public class Projectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log(collision.gameObject.name);
-        PlayerCharacter player = GetComponent<PlayerCharacter>();
+        //PlayerCharacter player = GetComponent<PlayerCharacter>();
         //If projectile is player's
         //if (gameObject.layer == (int)USER_LAYER.PLAYER_PROJECTILE &&
         //    collision.gameObject.layer == (int)USER_LAYER.OPPONENT)
@@ -50,25 +49,25 @@ public class Projectile : MonoBehaviour
         //    }
             
         //}
-        if(gameObject.layer == (int)USER_LAYER.OPPONENT_PROJECTILE &&
-            collision.gameObject.layer == (int)USER_LAYER.PLAYER)
-        {
-            collision.gameObject.GetComponent<PlayerCharacter>().hp -= 1;
-            collision.gameObject.GetComponent<PlayerCharacter>().hpBar.fillAmount -= 0.25f;
+        // if(gameObject.layer == (int)USER_LAYER.OPPONENT_PROJECTILE &&
+        //     collision.gameObject.layer == (int)USER_LAYER.PLAYER)
+        // {
+        //     collision.gameObject.GetComponent<PlayerCharacter>().hp -= 1;
+        //     collision.gameObject.GetComponent<PlayerCharacter>().hpBar.fillAmount -= 0.25f;
 
-            if (collision.gameObject.GetComponent<PlayerCharacter>().hp == 0)
-            {
-                collision.gameObject.GetComponent<PlayerCharacter>().life -= 1;
-                collision.gameObject.GetComponent<PlayerCharacter>().PlayerRevive_1();
-                collision.gameObject.GetComponent<PlayerSpawner>().Respawn();
+        //     if (collision.gameObject.GetComponent<PlayerCharacter>().hp == 0)
+        //     {
+        //         collision.gameObject.GetComponent<PlayerCharacter>().life -= 1;
+        //         collision.gameObject.GetComponent<PlayerCharacter>().PlayerRevive_1();
+        //         collision.gameObject.GetComponent<PlayerSpawner>().Respawn();
 
-                if (collision.gameObject.GetComponent<PlayerCharacter>().life == 0)
-                {
-                    Debug.Log("0");
-                    collision.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
-                }
-            }
-        }
+        //         if (collision.gameObject.GetComponent<PlayerCharacter>().life == 0)
+        //         {
+        //             Debug.Log("0");
+        //             collision.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
+        //         }
+        //     }
+        // }
 
         //    if (collision.gameObject.layer == USER_LAYER.PLAYER)
         //{
@@ -85,6 +84,7 @@ public class Projectile : MonoBehaviour
         {
             gameObject.SetActive(false);
             owner.ReturnProjectile(this);
+            ownedClient.SendProjectileHitMsg(transform.position, rb.velocity, owner.internalID);
         }
     }
 }

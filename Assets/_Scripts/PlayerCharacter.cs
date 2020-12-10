@@ -62,15 +62,17 @@ public class PlayerCharacter : MonoBehaviour
 
     public GameObject gameoverPanel;
 
-    public GameServerNetworkClient clientConnection; 
+    public GameServerNetworkClient clientConnection;
+
+    public string internalID;  
 
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
-        gameoverPanel = GameObject.Find("GameOver"); 
-        gameoverPanel.SetActive(false);
+        //gameoverPanel = GameObject.Find("GameOver"); 
+        //gameoverPanel.SetActive(false);
 
         rb = GetComponent<Rigidbody2D>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
@@ -186,6 +188,29 @@ public class PlayerCharacter : MonoBehaviour
                 }
             }
         }
+        else if(IsPlayer2 == true)
+        {
+            if(rb.velocity.x <= 0)
+            {
+               if (isFacingRight == true)
+               {
+                   isFacingRight = false;
+                   transform.Rotate(0f, 180f, 0f);
+
+                   canvas.transform.localScale = new Vector3(1, 1, 1);
+               }
+            } 
+            else if (rb.velocity.x >= 0)
+            {
+                if (isFacingRight == false)
+               {
+                   isFacingRight = true;
+                   transform.Rotate(0f, 180f, 0f);
+
+                   canvas.transform.localScale = new Vector3(-1, 1, 1);
+               }
+            }
+        }
 
         ////Input for player2
         //else if(IsPlayer2 == true)
@@ -196,14 +221,7 @@ public class PlayerCharacter : MonoBehaviour
         //        moveDir.x = -1;
 
         //        //Characte flip
-        //        if (isFacingRight == true)
-        //        {
-        //            isFacingRight = false;
-        //            transform.Rotate(0f, 180f, 0f);
-
-        //           // canvas2.transform.localScale = new Vector3(1, 1, 1);
-
-        //        }
+        //       
 
         //    }
         //    else if (Input.GetKey(KeyCode.D))
@@ -257,7 +275,7 @@ public class PlayerCharacter : MonoBehaviour
         rb.velocity = moveVector;
     }
 
-    void ShootProjectile()
+    public void ShootProjectile()
     {
         //Get projectile from list
         if (listOfProjectile.Count != 0)
@@ -278,9 +296,13 @@ public class PlayerCharacter : MonoBehaviour
             //Set owner of this projectile
             projectile.owner = this;
 
+            //Set Client of Projectile
+            projectile.ownedClient = clientConnection;
+
             //Can't shoot projectile continousely
             canShoot = false;
-            clientConnection.SendHitScanMsg(projectile.transform.position, forwardVec); // Send Message to Server to HitScan from this position
+            //clientConnection.SendHitScanMsg(projectile.transform.position, forwardVec); // Send Message to Server to HitScan from this position
+            clientConnection.SendProjectileFireMsg(internalID);
             Invoke("ResetShootCoolDown", shootCoolTime);
         }
     }
@@ -336,7 +358,7 @@ public class PlayerCharacter : MonoBehaviour
     //}
     public void OnGameOver()
     {
-        gameoverPanel.SetActive(true);
+        //gameoverPanel.SetActive(true);
         Time.timeScale = 0.0f;
     }
 }

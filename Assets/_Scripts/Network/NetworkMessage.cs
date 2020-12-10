@@ -23,11 +23,14 @@ namespace NetworkMessages
         HANDSHAKE,
         HITSCAN,
         PLAYER_HIT,
+        PROJECTILE_HIT,
+        PROJECTILE_FIRE,
         PLAYER_INTERNALID,
         PLAYER_UPDATE,
         SERVER_UPDATE,
         SPAWN_EXISTED_PLAYERS,
-        SPAWN_NEW_PLAYER
+        SPAWN_NEW_PLAYER,
+        DISCONNECTED_PLAYER
     }
 
     [System.Serializable]
@@ -102,6 +105,30 @@ namespace NetworkMessages
     }
 
     [System.Serializable]
+    public class ProjectileHitMsg : NetworkHeader
+    {
+        public string projectileOwnerID;
+        public Vector3 hitLocation;
+        public Vector3 direction;  
+        public ProjectileHitMsg()
+        {      // Constructor
+            cmd = Commands.PROJECTILE_HIT;
+            hitLocation = Vector3.zero; 
+            direction = Vector3.zero; 
+        }
+    }
+
+    [System.Serializable]
+    public class ProjectileFireMsg : NetworkHeader
+    {
+        public string projectileOwnerID;  
+        public ProjectileFireMsg()
+        {      // Constructor
+            cmd = Commands.PROJECTILE_FIRE;
+        }
+    }
+
+    [System.Serializable]
     public class PlayerInternalIDMsg : NetworkHeader
     {
         public string playerInternalID;
@@ -130,6 +157,16 @@ namespace NetworkMessages
         {      // Constructor
             cmd = Commands.SERVER_UPDATE;
             players = new List<NetworkObjects.NetworkPlayer>();
+        }
+    }
+    [System.Serializable]
+    public class DisconnectedPlayersMsg : NetworkHeader
+    {
+        public List<string> disconnectedPlayers;
+        public DisconnectedPlayersMsg()
+        {      // Constructor
+            cmd = Commands.DISCONNECTED_PLAYER;
+            disconnectedPlayers = new List<string>();
         }
     }
 }

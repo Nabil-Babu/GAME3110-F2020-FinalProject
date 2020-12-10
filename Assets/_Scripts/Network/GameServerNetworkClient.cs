@@ -122,6 +122,11 @@ public class GameServerNetworkClient : MonoBehaviour
                DealDamageToClient(playerHitMsg.playerInternalID);
                Debug.Log("Player Hit message received: "+playerHitMsg.playerInternalID);
                break;
+            case Commands.PROJECTILE_FIRE:
+               ProjectileFireMsg projectileFireMsg = JsonUtility.FromJson<ProjectileFireMsg>(recMsg);
+               FireProjectileFromClient(projectileFireMsg.projectileOwnerID);
+               Debug.Log("Player Fire message received from: "+projectileFireMsg.projectileOwnerID);
+               break;
 
             case Commands.PLAYER_INTERNALID:
                 PlayerInternalIDMsg internalIDMsg = JsonUtility.FromJson<PlayerInternalIDMsg>(recMsg);
@@ -129,17 +134,17 @@ public class GameServerNetworkClient : MonoBehaviour
                 Debug.Log("Got internalId from server : " + playerInternalID);
                 break;
 
-            //case Commands.PLAYER_UPDATE:
-            //    PlayerUpdateMsg puMsg = JsonUtility.FromJson<PlayerUpdateMsg>(recMsg);
-            //    //Debug.Log("Player update message received!");
-            //    Debug.Log("Got data from server, player Pos: " + puMsg.player.pos);
-            //    break;
+            case Commands.PLAYER_UPDATE:
+               PlayerUpdateMsg puMsg = JsonUtility.FromJson<PlayerUpdateMsg>(recMsg);
+               Debug.Log("Player update message received!");
+               Debug.Log("Got data from server, player ID: " + puMsg.player.internalID);
+               break;
 
-            //case Commands.SERVER_UPDATE:
-            //    ServerUpdateMsg suMsg = JsonUtility.FromJson<ServerUpdateMsg>(recMsg);
-            //    Debug.Log("Server update message received!");
-            //    UpdateClientsInfo(suMsg);
-            //    break;
+            case Commands.SERVER_UPDATE:
+               ServerUpdateMsg suMsg = JsonUtility.FromJson<ServerUpdateMsg>(recMsg);
+               Debug.Log("Server update message received!");
+               UpdateClientsInfo(suMsg);
+               break;
 
             //To spawn existed players
             case Commands.SPAWN_EXISTED_PLAYERS:
@@ -155,12 +160,12 @@ public class GameServerNetworkClient : MonoBehaviour
                 SpawnNewPlayer(newPlayerInfo);
                 break;
 
-            ////handle disconnected player
-            //case Commands.DISCONNECTED_PLAYER:
-            //    DisconnectedPlayersMsg dpm = JsonUtility.FromJson<DisconnectedPlayersMsg>(recMsg);
-            //    Debug.Log("Disconnected player info recieved!");
-            //    DeleteDisconnectPlayer(dpm);
-            //    break;
+            //handle disconnected player
+            case Commands.DISCONNECTED_PLAYER:
+               DisconnectedPlayersMsg dpm = JsonUtility.FromJson<DisconnectedPlayersMsg>(recMsg);
+               Debug.Log("Disconnected player info recieved!");
+               DeleteDisconnectPlayer(dpm);
+               break;
 
             default:
                 Debug.Log("Unrecognized message received!");
@@ -218,6 +223,24 @@ public class GameServerNetworkClient : MonoBehaviour
         SendToServer(JsonUtility.ToJson(hitScanMsg)); 
     }
 
+    public void SendProjectileFireMsg(string internalID)
+    {
+        Debug.Log("Sending Projectile Fire Message to Server"); 
+        ProjectileFireMsg projectileFireMsg = new ProjectileFireMsg();
+        projectileFireMsg.projectileOwnerID = internalID; 
+        SendToServer(JsonUtility.ToJson(projectileFireMsg)); 
+    }
+
+    public void SendProjectileHitMsg(Vector3 origin, Vector3 direction, string ownerID)
+    {
+        Debug.Log("Sending Projectile Hit Message to Server");
+        ProjectileHitMsg projectileHit = new ProjectileHitMsg();
+        projectileHit.hitLocation = origin;
+        projectileHit.direction = direction;
+        projectileHit.projectileOwnerID = ownerID;
+        SendToServer(JsonUtility.ToJson(projectileHit));
+    }
+
     //Spawn existed player in server
     void SpawnExistedPlayer(ServerUpdateMsg data)
     {
@@ -227,6 +250,9 @@ public class GameServerNetworkClient : MonoBehaviour
 
             listOfClients[data.players[i].internalID] = avatar;
             avatar.transform.position = data.players[i].pos;
+            avatar.GetComponentInChildren<PlayerCharacter>().IsPlayer2 = true;
+            avatar.GetComponent<PlayerCharacter>().internalID = data.players[i].internalID; 
+            avatar.GetComponentInChildren<Text>().text = "Player "+data.players[i].internalID;
             //avatar.GetComponentInChildren<TextMesh>().text = data.players[i].id;
         }
     }
@@ -238,7 +264,8 @@ public class GameServerNetworkClient : MonoBehaviour
         listOfClients[data.player.internalID] = avatar;
         avatar.transform.position = data.player.pos;
         avatar.GetComponentInChildren<Text>().text = "Player "+data.player.internalID;
-        avatar.GetComponentInChildren<PlayerCharacter>().IsPlayer2 = true; 
+        avatar.GetComponentInChildren<PlayerCharacter>().IsPlayer2 = true;
+        avatar.GetComponent<PlayerCharacter>().internalID = data.player.internalID;  
     }
 
     void SpawnClientOwnedPlayer(HandshakeMsg data)
@@ -248,7 +275,8 @@ public class GameServerNetworkClient : MonoBehaviour
         avatar.transform.position = data.player.pos;
         avatar.GetComponent<PlayerSpawner>().spawnPoint = data.player.pos;
         avatar.GetComponentInChildren<Text>().text = "Player "+data.player.internalID;
-        avatar.GetComponent<PlayerCharacter>().clientConnection = this; 
+        avatar.GetComponent<PlayerCharacter>().clientConnection = this;
+        avatar.GetComponent<PlayerCharacter>().internalID = data.player.internalID; 
         player = avatar.transform; 
     }
 
@@ -260,34 +288,48 @@ public class GameServerNetworkClient : MonoBehaviour
         }
     }
 
-    //Update all client info with data from server
-    //void UpdateClientsInfo(ServerUpdateMsg data)
-    //{
-    //    for (int i = 0; i < data.players.Count; ++i)
-    //    {
-    //        if (listOfClients.ContainsKey(data.players[i].id))
-    //        {
-    //            listOfClients[data.players[i].id].transform.position = data.players[i].pos;
-    //            listOfClients[data.players[i].id].GetComponent<Renderer>().material.color = data.players[i].color;
-    //        }
-    //        //My info, my information is not in listOfClients
-    //        else if (playerInfo.player.id == data.players[i].id)
-    //        {
-    //            player.gameObject.GetComponent<Renderer>().material.color = data.players[i].color;
-    //            playerInfo.player.color = data.players[i].color;
-    //        }
-    //    }
-    //}
+    void FireProjectileFromClient(string clientID)
+    {
+        if(clientID != playerInternalID)
+        {
+            if(listOfClients.ContainsKey(clientID))
+            {
+                listOfClients[clientID].GetComponent<PlayerCharacter>().ShootProjectile();
+            }
+        }
+    }
 
-    //void DeleteDisconnectPlayer(DisconnectedPlayersMsg data)
-    //{
-    //    for (int i = 0; i < data.disconnectedPlayers.Count; ++i)
-    //    {
-    //        if (listOfClients.ContainsKey(data.disconnectedPlayers[i]))
-    //        {
-    //            Destroy(listOfClients[data.disconnectedPlayers[i]]);
-    //            listOfClients.Remove(data.disconnectedPlayers[i]);
-    //        }
-    //    }
-    //}
+    // Update all client info with data from server
+    void UpdateClientsInfo(ServerUpdateMsg data)
+    {
+       for (int i = 0; i < data.players.Count; ++i)
+       {
+           if (listOfClients.ContainsKey(data.players[i].internalID))
+           {
+               if(data.players[i].internalID != playerInternalID)
+               {
+                   listOfClients[data.players[i].internalID].transform.position = data.players[i].pos;
+               }
+               //listOfClients[data.players[i].id].GetComponent<Renderer>().material.color = data.players[i].color;
+           }
+        //    //My info, my information is not in listOfClients
+        //    else if (playerInfo.player.id == data.players[i].id)
+        //    {
+        //        player.gameObject.GetComponent<Renderer>().material.color = data.players[i].color;
+        //        playerInfo.player.color = data.players[i].color;
+        //    }
+       }
+    }
+
+    void DeleteDisconnectPlayer(DisconnectedPlayersMsg data)
+    {
+       for (int i = 0; i < data.disconnectedPlayers.Count; ++i)
+       {
+           if (listOfClients.ContainsKey(data.disconnectedPlayers[i]))
+           {
+               Destroy(listOfClients[data.disconnectedPlayers[i]]);
+               listOfClients.Remove(data.disconnectedPlayers[i]);
+           }
+       }
+    }
 }
