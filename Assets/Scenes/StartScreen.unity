@@ -8506,7 +8506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba57adc72e175d849a28d285a5c6f142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchMakingServerIP: localhost
+  matchMakingServerIP: 3.137.176.69
   matchMakingServerPort: 12345
   onStartConnectToMatchMakingServer:
     m_PersistentCalls:

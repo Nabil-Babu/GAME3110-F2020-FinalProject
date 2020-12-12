@@ -37,7 +37,7 @@ public class GameServerNetworkClient : MonoBehaviour
         
         //serverIP = "174.95.96.92"; // Was testing on my Laptop did not work
 
-        serverIP = "127.0.0.1";
+        //serverIP = "127.0.0.1";
         var endpoint = NetworkEndPoint.Parse(serverIP, gameServerPort);
         m_Connection = m_Driver.Connect(endpoint); //connect to server
 

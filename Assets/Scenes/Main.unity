@@ -10758,7 +10758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38a894cdbd8758742b529c8eb225a96b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverIP: 
+  serverIP: 3.137.176.69
   gameServerPort: 12346
   player: {fileID: 0}
   clientAvatar: {fileID: 6989372055743883085, guid: a677e67a00a2f2e47ac1e00064b0f52d, type: 3}
