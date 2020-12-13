@@ -593,7 +593,7 @@ GameObject:
   - component: {fileID: 6989372055743883082}
   m_Layer: 10
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -665,10 +665,8 @@ MonoBehaviour:
   JumpSound: Jump
   canvas: {fileID: 6989372055337039749}
   hpBar: {fileID: 6989372055049321519}
-  gameoverPanel: {fileID: 1999913610062133372, guid: 97a65090125c31847b83c2a022e8917b, type: 3}
   clientConnection: {fileID: 0}
   internalID: 
-  playerObject: {fileID: 0}
   textLife: {fileID: 1304136303638423442}
 --- !u!70 &6989372055743883086
 CapsuleCollider2D:
