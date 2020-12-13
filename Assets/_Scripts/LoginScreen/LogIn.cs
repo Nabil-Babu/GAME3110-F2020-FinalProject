@@ -76,10 +76,19 @@ public class LogIn : MonoBehaviour
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError)
-        {
-            //Debug.Log(www.error);
-            Debug.LogWarning("Check user id and password");
-            dialog.SetText("Check user id and password", true);
+        {          
+            if (www.responseCode == 401)
+            {
+                Debug.LogWarning("Check password");
+                dialog.SetText("Check password", true);
+            }
+            else if(www.responseCode == 402)
+            {
+                Debug.LogWarning("Check user id");
+                dialog.SetText("Check user id", true);
+            }
+
+            
         }
         else
         {
