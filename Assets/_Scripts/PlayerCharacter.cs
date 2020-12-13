@@ -66,7 +66,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public string internalID;
 
-    public GameObject playerObject;
+    //public GameObject playerObject;
     public Text textLife;
     #endregion
 
@@ -75,7 +75,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         //gameoverPanel = GameObject.Find("GameOver"); 
         //gameoverPanel.SetActive(false);
-        playerObject = GameObject.Find("Player");
+        //playerObject = GameObject.Find("Player");
         
 
         rb = GetComponent<Rigidbody2D>();
@@ -359,7 +359,10 @@ public class PlayerCharacter : MonoBehaviour
             }
             if (life == 0)
             {
-                OnGameOver(); 
+                textLife.GetComponent<Text>().text = "0";
+                Destroy(this.gameObject);
+                gameoverPanel.SetActive(true);
+                //OnGameOver(); 
             }
         }
     }
@@ -371,8 +374,7 @@ public class PlayerCharacter : MonoBehaviour
     //}
     public void OnGameOver()
     {
-        gameoverPanel.SetActive(true);
-        Destroy(playerObject);
+        //Destroy(playerObject);
         //Time.timeScale = 0.0f;
     }
 }

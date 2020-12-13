@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class DeathBox : MonoBehaviour
 {
     public GameObject diePanel;
-    public GameObject playerObject;
-    public GameObject textLife;
+    //public GameObject playerObject;
+    //public GameObject textLife;
 
     private void Start()
     {
-        playerObject = GameObject.Find("Player");
-        textLife = GameObject.Find("PlayerLife");
+        //playerObject = GameObject.Find("Player");
+        //textLife = GameObject.Find("PlayerLife");
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -24,18 +24,18 @@ public class DeathBox : MonoBehaviour
 
             if (collider.gameObject.GetComponent<PlayerCharacter>().life == 2)
             {
-                textLife.GetComponent<Text>().text = "2";
+                //textLife.GetComponent<Text>().text = "2";
             }
 
             if (collider.gameObject.GetComponent<PlayerCharacter>().life == 1)
             {
-                textLife.GetComponent<Text>().text = "1";
+                //textLife.GetComponent<Text>().text = "1";
             }
 
             if (collider.gameObject.GetComponent<PlayerCharacter>().life == 0)
             {
                 diePanel.SetActive(true);
-                Destroy(playerObject);
+                //Destroy(playerObject);
                 Debug.Log("0");
                 //collider.gameObject.GetComponent<PlayerCharacter>().OnGameOver();
             }
