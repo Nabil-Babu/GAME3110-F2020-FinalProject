@@ -64,8 +64,10 @@ public class PlayerCharacter : MonoBehaviour
 
     public GameServerNetworkClient clientConnection;
 
-    public string internalID;  
+    public string internalID;
 
+    public GameObject playerObject;
+    public Text textLife;
     #endregion
 
     // Start is called before the first frame update
@@ -73,6 +75,8 @@ public class PlayerCharacter : MonoBehaviour
     {
         //gameoverPanel = GameObject.Find("GameOver"); 
         //gameoverPanel.SetActive(false);
+        playerObject = GameObject.Find("Player");
+        
 
         rb = GetComponent<Rigidbody2D>();
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
@@ -344,7 +348,16 @@ public class PlayerCharacter : MonoBehaviour
             life -= 1;
             PlayerRevive_1();
             GetComponent<PlayerSpawner>().Respawn(); 
-            if(life == 0)
+
+            if(life == 2)
+            {
+                textLife.GetComponent<Text>().text = "2";
+            }
+            if (life == 1)
+            {
+                textLife.GetComponent<Text>().text = "1";
+            }
+            if (life == 0)
             {
                 OnGameOver(); 
             }
@@ -358,7 +371,8 @@ public class PlayerCharacter : MonoBehaviour
     //}
     public void OnGameOver()
     {
-        //gameoverPanel.SetActive(true);
-        Time.timeScale = 0.0f;
+        gameoverPanel.SetActive(true);
+        Destroy(playerObject);
+        //Time.timeScale = 0.0f;
     }
 }
