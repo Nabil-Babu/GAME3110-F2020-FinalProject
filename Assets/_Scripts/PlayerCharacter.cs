@@ -60,7 +60,7 @@ public class PlayerCharacter : MonoBehaviour
     public Image hpBar;
     //public Image hpBar2;
 
-    public GameObject gameoverPanel;
+    //public GameObject gameoverPanel;
 
     public GameServerNetworkClient clientConnection;
 
@@ -361,7 +361,7 @@ public class PlayerCharacter : MonoBehaviour
             {
                 textLife.GetComponent<Text>().text = "0";
                 Destroy(this.gameObject);
-                gameoverPanel.SetActive(true);
+                //gameoverPanel.SetActive(true);
                 //OnGameOver(); 
             }
         }

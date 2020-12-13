@@ -24,16 +24,20 @@ public class DeathBox : MonoBehaviour
 
             if (collider.gameObject.GetComponent<PlayerCharacter>().life == 2)
             {
+                collider.gameObject.GetComponent<PlayerCharacter>().textLife.GetComponent<Text>().text = "2";
                 //textLife.GetComponent<Text>().text = "2";
             }
 
             if (collider.gameObject.GetComponent<PlayerCharacter>().life == 1)
             {
+                collider.gameObject.GetComponent<PlayerCharacter>().textLife.GetComponent<Text>().text = "2";
                 //textLife.GetComponent<Text>().text = "1";
             }
 
             if (collider.gameObject.GetComponent<PlayerCharacter>().life == 0)
             {
+                Destroy(collider.gameObject.GetComponent<PlayerCharacter>());
+
                 diePanel.SetActive(true);
                 //Destroy(playerObject);
                 Debug.Log("0");
