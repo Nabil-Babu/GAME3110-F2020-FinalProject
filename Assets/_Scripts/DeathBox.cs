@@ -30,7 +30,7 @@ public class DeathBox : MonoBehaviour
 
             if (collider.gameObject.GetComponent<PlayerCharacter>().life == 1)
             {
-                collider.gameObject.GetComponent<PlayerCharacter>().textLife.GetComponent<Text>().text = "2";
+                collider.gameObject.GetComponent<PlayerCharacter>().textLife.GetComponent<Text>().text = "1";
                 //textLife.GetComponent<Text>().text = "1";
             }
 
