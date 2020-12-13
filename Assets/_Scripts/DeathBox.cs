@@ -8,11 +8,11 @@ public class DeathBox : MonoBehaviour
     public GameObject diePanel;
     //public GameObject playerObject;
     //public GameObject textLife;
-    public GameObject[] players;
+   // public GameObject[] players;
 
     private void Start()
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
+        //players = GameObject.FindGameObjectsWithTag("Player");
         //playerObject = GameObject.Find("Player");
         //textLife = GameObject.Find("PlayerLife");
     }
@@ -42,8 +42,7 @@ public class DeathBox : MonoBehaviour
 
                 Destroy(collider.gameObject.GetComponent<PlayerCharacter>().gameObject);
 
-                if(players[0] == null || players[1] == null)
-                    diePanel.SetActive(true);
+                diePanel.SetActive(true);
 
                 //Destroy(playerObject);
                 Debug.Log("0");
