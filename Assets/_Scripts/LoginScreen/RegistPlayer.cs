@@ -74,10 +74,18 @@ public class RegistPlayer : MonoBehaviour
         //Send the request then wait here until it returns
         yield return uwr.SendWebRequest();
 
-        if (uwr.isNetworkError)
+        if (uwr.isNetworkError || uwr.isHttpError)
         {
-            Debug.Log("Error While Sending: " + uwr.error);
-            dialog.SetText("Network error, check RegisterPlayer", true);
+            if (uwr.responseCode == 401)
+            {
+                Debug.LogWarning("User ID already exist, try other user ID");
+                dialog.SetText("User ID already exist, try other user ID", true);
+            }
+            else
+            {
+                Debug.Log("Error While Sending: " + uwr.error);
+                dialog.SetText("Network error, check RegisterPlayer", true);
+            }
         }
         else
         {
